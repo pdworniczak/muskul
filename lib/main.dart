@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 void main() => runApp(MyApp());
 
@@ -72,11 +75,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                     authenticationFormState.save();
                     if (authenticationFormState.validate()) {
                       print("email: $email password: $password");
+
+                      _auth
+                          .signInWithEmailAndPassword(
+                              email: email, password: password)
+                          .then((authResult) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NavigationScreen()));
+                      });
                     }
-                    // Navigator.pushReplacement(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) => NavigationScreen()));
                   }),
               Spacer(),
             ],
@@ -97,10 +106,16 @@ class NavigationScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.exit_to_app),
             tooltip: "logout",
-            onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AuthenticationScreen())),
+            onPressed: () {
+              _auth.signOut().then(
+                (_) {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AuthenticationScreen()));
+                },
+              );
+            },
           )
         ],
       ),

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "682677280958",
+    "firebase_url": "https://muskul-dev.firebaseio.com",
+    "project_id": "muskul-dev",
+    "storage_bucket": "muskul-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682677280958:android:149f13905264936a2c3eef",
+        "android_client_info": {
+          "package_name": "pl.muskul.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682677280958-u2tumiua8ekl8jqcedjn7kk821umjcql.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYPWqvC6Dxyuab7D-zwzv7QUbGXpvvIg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682677280958-u2tumiua8ekl8jqcedjn7kk821umjcql.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
