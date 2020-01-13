@@ -23,41 +23,64 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  final _authenticationFormKey = GlobalKey<FormState>();
+
+  String email = "";
+  String password = "";
+
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        child: Column(
-          children: <Widget>[
-            Spacer(),
-            Text(
-              "MUSKUŁ",
-            ),
-            SizedBox(
-              height: 25,
-            ),
-            Container(
-              width: 260,
-              child: Column(
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(labelText: "email"),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: "password",
-                    ),
-                  ),
-                ],
+        child: Form(
+          key: _authenticationFormKey,
+          child: Column(
+            children: <Widget>[
+              Spacer(),
+              Text(
+                "MUSKUŁ",
               ),
-            ),
-            RaisedButton(
-              child: Text("Log In"),
-              onPressed: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => NavigationScreen())),
-            ),
-            Spacer(),
-          ],
+              SizedBox(
+                height: 25,
+              ),
+              Container(
+                width: 260,
+                child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                      decoration: InputDecoration(labelText: "email"),
+                      onSaved: (val) => email = val,
+                      validator: (value) =>
+                          value.isEmpty ? "Please enter valid email." : null,
+                    ),
+                    TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "password",
+                        ),
+                        obscureText: true,
+                        onSaved: (val) => password = val,
+                        validator: (value) =>
+                            value.isEmpty ? "Please enter password." : null),
+                  ],
+                ),
+              ),
+              RaisedButton(
+                  child: Text("Log In"),
+                  onPressed: () {
+                    FormState authenticationFormState =
+                        _authenticationFormKey.currentState;
+                    authenticationFormState.save();
+                    if (authenticationFormState.validate()) {
+                      print("email: $email password: $password");
+                    }
+                    // Navigator.pushReplacement(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) => NavigationScreen()));
+                  }),
+              Spacer(),
+            ],
+          ),
         ),
       ),
     );
