@@ -11,18 +11,23 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  var trainings = <DocumentSnapshot>[];
+  var _trainings = <DocumentSnapshot>[];
 
   @override
   void initState() {
+    print('init');
     super.initState();
     FirebaseAuth.instance.currentUser().then((user) {
       Firestore.instance
           .collection('pushups')
           .where('uid', isEqualTo: user.uid)
           .snapshots()
-          .listen((data) => trainings = data.documents);
-      // .forEach((doc) => print("${doc['scope']} ${doc['date']}")));
+          .listen((data) {
+        setState(() {
+          print(data.documents[3].data);
+          this._trainings = data.documents;
+        });
+      });
     });
   }
 
@@ -33,7 +38,7 @@ class _ListScreenState extends State<ListScreen> {
       children: <Widget>[
         Spacer(),
         Text("List"),
-        ...trainings
+        ..._trainings
             .map((DocumentSnapshot document) => Row(
                   children: <Widget>[
                     Text(document['scope']),
