@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import '../navigation/navigation.dart' as navigation;
+import 'package:provider/provider.dart';
+import 'package:muskul/navigation/navigation.dart' as navigation;
+import 'package:muskul/pushups/models/PushupsModel.dart';
 
 class AuthenticationScreen extends StatefulWidget {
   @override
@@ -18,6 +20,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var pushupsModel = Provider.of<PushupsModel>(context);
+
     return Material(
       child: Container(
         child: Form(
@@ -64,7 +68,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       FirebaseAuth.instance
                           .signInWithEmailAndPassword(
                               email: email, password: password)
-                          .then((result) => navigation.toNavigation(context));
+                          .then(
+                        (result) {
+                          pushupsModel.getTrainings();
+                          navigation.toNavigation(context);
+                        },
+                      );
                     }
                   }),
               Spacer(),

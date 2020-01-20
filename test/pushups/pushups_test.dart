@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:muskul/pushups/pushups.dart';
+import 'package:muskul/pushups/Consts.dart';
+import 'package:muskul/pushups/models/ScheduleModel.dart';
 
 import 'scheduleString.dart';
 
@@ -13,7 +14,7 @@ main() {
 
   group('Schedule', () {
     test('Schedule.fromJson', () {
-      var schedule = Schedule.fromJson(jsonDecode(scheduleString));
+      var schedule = ScheduleModel.fromJson(jsonDecode(scheduleString));
 
       expect(
           schedule

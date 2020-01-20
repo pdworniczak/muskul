@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'NavigationScreen.dart';
-import '../authentication/AuthenticationScreen.dart';
-import '../pushups/ListScreen.dart';
+import 'package:muskul/authentication/AuthenticationScreen.dart';
+import 'package:muskul/navigation/NavigationScreen.dart';
+import 'package:muskul/pushups/screens/ListScreen.dart';
 
 void toNavigation(BuildContext context) {
   Navigator.pushReplacement(
