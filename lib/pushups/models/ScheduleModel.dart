@@ -1,3 +1,5 @@
+import 'package:muskul/pushups/models/TrainingModel.dart';
+
 class ScheduleModel {
   List<ScheduleScope> _scopes = [];
 
@@ -9,6 +11,10 @@ class ScheduleModel {
 
   ScheduleScope getScope(String scope) {
     return _scopes.firstWhere((scheduleScope) => scheduleScope._scope == scope);
+  }
+
+  ScheduleSerie findTrainingScheduledSeries(RegularTraining training) {
+    return this.getScope(training.scope).getDay(training.day).getSeries();
   }
 
   @override
@@ -64,6 +70,10 @@ class ScheduleSerie {
     seriesJson.forEach((no, value) {
       _series[int.parse(no)] = int.parse(value.toString());
     });
+  }
+
+  Map<int, int> get series {
+    return _series;
   }
 
   int getSerieExpectedResult(int serie) {

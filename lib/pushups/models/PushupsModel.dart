@@ -38,15 +38,9 @@ class PushupsModel extends ChangeNotifier {
           (data) {
             data.documents.forEach((document) {
               if (document['scope'] == Scope.TEST) {
-                _trainings.add(TestTraining(document['scope'], document['date'],
-                    user.uid, document['result']));
+                _trainings.add(TestTraining.fromJson(document.data));
               } else {
-                _trainings.add(RegularTraining(
-                    document['scope'],
-                    document['date'],
-                    user.uid,
-                    document['day'],
-                    document['result']));
+                _trainings.add(RegularTraining.fromJson(document.data));
               }
             });
           },
@@ -57,5 +51,22 @@ class PushupsModel extends ChangeNotifier {
 
   void logoutUser() {
     _trainings = [];
+  }
+
+  bool isTrainingCompleted(TrainingModel training) {
+    if (training.scope == Scope.TEST) {
+      return true;
+    }
+
+    var seriesSchedule = schedule.findTrainingScheduledSeries(training);
+
+    for (int i = 0; i < seriesSchedule.series.length; i++) {
+      if ((training as RegularTraining).result[i] <
+          seriesSchedule.series[i + 1]) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
