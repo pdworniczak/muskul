@@ -25,7 +25,7 @@ main() {
           schedule
               .getScope(Scope.SCOPE_11_20)
               .getDay(5)
-              .getSeries()
+              .series
               .getSerieExpectedResult(4),
           13);
     });
@@ -59,11 +59,14 @@ main() {
     group("create", () {
       test('Test training from json', () {
         var testTraining = TestTraining.fromJson(testTrainingJSON);
+        expect(testTraining.scope, Scope.TEST);
       });
 
       test('regular training from json', () {
         var regTraining = RegularTraining.fromJson(regularTrainingJSON);
-        print(regTraining);
+        expect(regTraining.day, 1);
+        expect(regTraining.scope, Scope.SCOPE_51_55);
+        expect(regTraining.result, [30, 39, 33, 0, 0]);
       });
     });
 
@@ -71,22 +74,65 @@ main() {
       test('test completed', () {
         expect(
             pushups
-                .isTrainingCompleted(TestTraining.fromJson(testTrainingJSON)),
+                .isTrainingSucessfull(TestTraining.fromJson(testTrainingJSON)),
             true);
       });
 
       test('training not completed', () {
         expect(
-            pushups.isTrainingCompleted(
+            pushups.isTrainingSucessfull(
                 RegularTraining.fromJson(regularTrainingJSON)),
             false);
       });
 
       test('training completed', () {
         expect(
-            pushups.isTrainingCompleted(
+            pushups.isTrainingSucessfull(
                 RegularTraining.fromJson(regularTrainingCompletedJSON)),
             true);
+      });
+    });
+
+    group("next", () {
+      var date = Timestamp.fromDate(DateTime.now());
+      test("test", () {
+        var training = TestTraining(date, 16);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("fail", () {
+        var training = RegularTraining(Scope.SCOPE_11_20, date, 3, [0]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("success", () {
+        var training =
+            RegularTraining(Scope.SCOPE_11_20, date, 3, [11, 13, 9, 9, 13]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("success last", () {
+        var training =
+            RegularTraining(Scope.SCOPE_11_20, date, 6, [14, 16, 13, 13, 19]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(nextTraining.toString(),
+            TestTraining.emptyResult(nextTraining.date).toString());
       });
     });
   });

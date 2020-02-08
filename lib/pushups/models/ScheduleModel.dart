@@ -14,7 +14,7 @@ class ScheduleModel {
   }
 
   ScheduleSerie findTrainingScheduledSeries(RegularTraining training) {
-    return this.getScope(training.scope).getDay(training.day).getSeries();
+    return this.getScope(training.scope).getDay(training.day).series;
   }
 
   @override
@@ -37,6 +37,11 @@ class ScheduleScope {
     return _days.firstWhere((scheduleDay) => scheduleDay._day == day);
   }
 
+  ScheduleDay get lastDay {
+    return _days
+        .reduce((current, next) => current._day < next._day ? next : current);
+  }
+
   @override
   String toString() {
     return '$_scope: $_days';
@@ -53,7 +58,11 @@ class ScheduleDay {
     });
   }
 
-  ScheduleSerie getSeries() {
+  int get day {
+    return _day;
+  }
+
+  ScheduleSerie get series {
     return _series;
   }
 
