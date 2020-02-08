@@ -35,7 +35,7 @@ class NavigationScreen extends StatelessWidget {
             Consumer<PushupsModel>(
               builder: (context, pushups, _) => RaisedButton(
                 child: Text("Add"),
-                onPressed: () => print('ADD ${pushups.schedule}'),
+                onPressed: () => navigation.toAdd(context),
               ),
             ),
             RaisedButton(
