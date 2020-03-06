@@ -10,7 +10,7 @@ class ListScreen extends StatelessWidget {
     return Material(
       child: Consumer<PushupsModel>(
           builder: (context, pushups, _) => Column(
-                children: <Widget>[
+                children: [
                   Spacer(),
                   Text("List"),
                   ...pushups.trainings

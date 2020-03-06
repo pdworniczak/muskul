@@ -10,11 +10,11 @@ class TrainingModel {
 
   TrainingModel.empty();
 
-  get scope {
+  String get scope {
     return _scope;
   }
 
-  get date {
+  Timestamp get date {
     return _date;
   }
 }

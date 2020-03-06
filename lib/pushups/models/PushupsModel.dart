@@ -70,6 +70,11 @@ class PushupsModel extends ChangeNotifier {
     return true;
   }
 
+  TrainingModel getLastTraining() {
+    return _trainings
+        .reduce((current, next) => current.date.compareTo(next.date) > 0 ? next : current);
+  }
+
   bool isLastTrainingOfScope(RegularTraining training) {
     var scheduleScope = _schedule.getScope(training.scope);
     return scheduleScope.lastDay.day == training.day;
@@ -80,9 +85,7 @@ class PushupsModel extends ChangeNotifier {
 
     if (training is TestTraining) {
       return RegularTraining.emptyResult(
-          Scope.getScopeOfTestResult(training.result),
-          date,
-          1);
+          Scope.getScopeOfTestResult(training.result), date, 1);
     } else if (training is RegularTraining) {
       if (isTrainingSucessfull(training)) {
         if (isLastTrainingOfScope(training)) {
