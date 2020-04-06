@@ -10,10 +10,6 @@ class AddScreen extends StatefulWidget {
   AddScreen(this.pushupsModel) {
     this.currentTraining =
         pushupsModel.getNextTraining(pushupsModel.getLastTraining());
-
-    if (this.currentTraining is RegularTraining) {
-      (this.currentTraining as RegularTraining).result.add(0);
-    }
   }
 
   @override
@@ -35,6 +31,7 @@ class _AddScreenState extends State<AddScreen> {
   Widget build(BuildContext context) {
     var series = _getScheduleSerieForNextTraining();
     var training = (widget.currentTraining as RegularTraining);
+    // training.result.add(series[training.result.length + 1]);
 
     return Scaffold(
       body: Center(
@@ -42,18 +39,20 @@ class _AddScreenState extends State<AddScreen> {
           children: <Widget>[
             Spacer(),
             Text(widget.currentTraining.toString()),
+            Text(series.toString()),
             ..._displayRegularTrainingForm(),
             if (training.result.length < series.length)
               RaisedButton(
-                child: Text('Next'),
+                child: Text(training.result.length > 0 ? 'Next' : 'Start'),
                 onPressed: () => setState(() {
-                  training.result.add(0);
+                  training.result.add(series[training.result.length + 1]);
                 }),
               ),
-            RaisedButton(
-              child: Text('Save'),
-              onPressed: () => print(widget.currentTraining),
-            ),
+            if (training.result.length == series.length)
+              RaisedButton(
+                child: Text('Save'),
+                onPressed: () => print(widget.currentTraining),
+              ),
             Spacer(),
           ],
         ),
