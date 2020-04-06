@@ -6,12 +6,14 @@ import 'package:muskul/pushups/models/TrainingModel.dart';
 class AddScreen extends StatefulWidget {
   PushupsModel pushupsModel;
   TrainingModel currentTraining;
-  Map<int, int> series;
 
   AddScreen(this.pushupsModel) {
-    this.series = _getCurrentTrainingSeries();
     this.currentTraining =
         pushupsModel.getNextTraining(pushupsModel.getLastTraining());
+
+    if (this.currentTraining is RegularTraining) {
+      (this.currentTraining as RegularTraining).result.add(0);
+    }
   }
 
   @override
@@ -31,16 +33,26 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
+    var series = _getScheduleSerieForNextTraining();
+    var training = (widget.currentTraining as RegularTraining);
+
     return Scaffold(
       body: Center(
         child: Column(
           children: <Widget>[
             Spacer(),
             Text(widget.currentTraining.toString()),
-            ..._displayForm(),
+            ..._displayRegularTrainingForm(),
+            if (training.result.length < series.length)
+              RaisedButton(
+                child: Text('Next'),
+                onPressed: () => setState(() {
+                  training.result.add(0);
+                }),
+              ),
             RaisedButton(
               child: Text('Save'),
-              onPressed: () => print('save'),
+              onPressed: () => print(widget.currentTraining),
             ),
             Spacer(),
           ],
@@ -60,29 +72,38 @@ class _AddScreenState extends State<AddScreen> {
         .series;
   }
 
-  List<Widget> _displayForm() {
+  List<Widget> _displayRegularTrainingForm() {
     List<Widget> entries = [];
+    var training = (widget.currentTraining as RegularTraining);
+    var series = _getScheduleSerieForNextTraining();
 
-    _getScheduleSerieForNextTraining().forEach((key, value) => {
-          entries.add(Row(
-            children: <Widget>[
-              RaisedButton(
-                child: Text('-'),
-                onPressed: () => setState(() {
-                  --widget.series[key];
-                }),
-              ),
-              Text(widget.series[key].toString()),
-              RaisedButton(
-                child: Text('+'),
-                onPressed: () => setState(() {
-                  ++widget.series[key];
-                }),
-              ),
-              Text(value.toString()),
-            ],
-          ))
-        });
+    for (int i = 0; i < training.result.length; i++) {
+      if (i == training.result.length - 1) {
+        entries.add(Column(children: <Widget>[
+          Text(series[i + 1].toString()),
+          Row(children: <Widget>[
+            Spacer(),
+            RaisedButton(
+              child: Text('-'),
+              onPressed: () => setState(() {
+                --training.result[i];
+              }),
+            ),
+            Text(training.result[i].toString()),
+            RaisedButton(
+              child: Text('+'),
+              onPressed: () => setState(() {
+                ++training.result[i];
+              }),
+            ),
+            Spacer()
+          ]),
+        ]));
+      } else {
+        entries.add(Text(training.result[i].toString()));
+      }
+    }
+
     return entries;
   }
 }
