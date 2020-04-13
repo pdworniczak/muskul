@@ -17,6 +17,10 @@ class TrainingModel {
   Timestamp get date {
     return _date;
   }
+
+  Map<String, dynamic> toJSON() {
+    return {'date': this._date, 'scope': this._scope};
+  }
 }
 
 class TestTraining extends TrainingModel {
@@ -36,6 +40,16 @@ class TestTraining extends TrainingModel {
 
   int get result {
     return _result;
+  }
+
+  @override
+  Map<String, dynamic> toJSON() {
+    var json = super.toJSON();
+    json.addAll({
+      'result': this._result,
+    });
+
+    return json;
   }
 
   @override
@@ -69,6 +83,17 @@ class RegularTraining extends TrainingModel {
 
   List<int> get result {
     return _result;
+  }
+
+  @override
+  Map<String, dynamic> toJSON() {
+    var json = super.toJSON();
+    json.addAll({
+      'day': this._day,
+      'result': this._result,
+    });
+
+    return json;
   }
 
   @override

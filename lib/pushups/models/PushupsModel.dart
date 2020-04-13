@@ -49,6 +49,10 @@ class PushupsModel extends ChangeNotifier {
     );
   }
 
+  Future saveTraining(TrainingModel training) {
+    return Firestore.instance.collection('pushups').document().setData(training.toJSON());
+  }
+
   void logoutUser() {
     _trainings = [];
   }
@@ -71,8 +75,8 @@ class PushupsModel extends ChangeNotifier {
   }
 
   TrainingModel getLastTraining() {
-    return _trainings
-        .reduce((current, next) => current.date.compareTo(next.date) > 0 ? next : current);
+    return _trainings.reduce((current, next) =>
+        current.date.compareTo(next.date) > 0 ? next : current);
   }
 
   bool isLastTrainingOfScope(RegularTraining training) {

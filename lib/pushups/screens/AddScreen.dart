@@ -3,9 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 
+import '../../navigation/navigation.dart' as navigation;
+
 class AddScreen extends StatefulWidget {
   PushupsModel pushupsModel;
   TrainingModel currentTraining;
+  bool finished = false;
 
   AddScreen(this.pushupsModel) {
     this.currentTraining =
@@ -44,15 +47,20 @@ class _AddScreenState extends State<AddScreen> {
             if (training.result.length < series.length)
               RaisedButton(
                 child: Text(training.result.length > 0 ? 'Next' : 'Start'),
-                onPressed: () => setState(() {
-                  training.result.add(series[training.result.length + 1]);
-                }),
+                onPressed: () {
+                  setState(() {
+                    if (training.result.length != 0 &&
+                        training.result.last < series[training.result.length]) {
+                      _saveTraining(context);
+                    } else {
+                      training.result.add(series[training.result.length + 1]);
+                    }
+                  });
+                },
               ),
             if (training.result.length == series.length)
               RaisedButton(
-                child: Text('Save'),
-                onPressed: () => print(widget.currentTraining),
-              ),
+                  child: Text('Save'), onPressed: () => _saveTraining(context)),
             Spacer(),
           ],
         ),
@@ -104,5 +112,16 @@ class _AddScreenState extends State<AddScreen> {
     }
 
     return entries;
+  }
+
+  void _saveTraining(BuildContext context) {
+    print(widget.currentTraining);
+
+    widget.pushupsModel.saveTraining(widget.currentTraining).then((result) {
+      print('SUCCESS ${result.toString()}');
+      navigation.toList(context);
+    }).catchError((error) {
+      print('ERROR ${error.toString()}');
+    });
   }
 }
