@@ -31,25 +31,50 @@ main() {
     });
   });
 
-  var testTrainingJSON = {
-    'date': Timestamp.fromDate(DateTime.now()),
-    'uid': 'EvS0jZSzTdet2xK6gcxfVoZ5RMP2',
-    'scope': Scope.TEST,
-    'serie': {"count": 51}
+  var trainingSerie = {
+    "testTrainingJSON": {
+      'date': Timestamp.fromDate(DateTime.now()),
+      'uid': 'EvS0jZSzTdet2xK6gcxfVoZ5RMP2',
+      'scope': Scope.TEST,
+      'serie': {"count": 51}
+    },
+    "regularTrainingJSON": {
+      "date": Timestamp.fromDate(DateTime.now()),
+      "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
+      "scope": Scope.SCOPE_51_55,
+      "serie": {1: 30, 2: 39, 3: 33, 4: 0, 5: 0},
+      "day": 1
+    },
+    "regularTrainingCompletedJSON": {
+      "date": Timestamp.fromDate(DateTime.now()),
+      "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
+      "scope": Scope.SCOPE_26_30,
+      "serie": {1: 30, 2: 39, 3: 33, 4: 33, 5: 41},
+      "day": 1
+    }
   };
-  var regularTrainingJSON = {
-    "date": Timestamp.fromDate(DateTime.now()),
-    "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
-    "scope": Scope.SCOPE_51_55,
-    "serie": {1: 30, 2: 39, 3: 33, 4: 0, 5: 0},
-    "day": 1
-  };
-  var regularTrainingCompletedJSON = {
-    "date": Timestamp.fromDate(DateTime.now()),
-    "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
-    "scope": Scope.SCOPE_26_30,
-    "serie": {1: 30, 2: 39, 3: 33, 4: 33, 5: 41},
-    "day": 1
+
+  var trainingResult = {
+    "testTrainingJSON": {
+      'date': Timestamp.fromDate(DateTime.now()),
+      'uid': 'EvS0jZSzTdet2xK6gcxfVoZ5RMP2',
+      'scope': Scope.TEST,
+      'result': 51
+    },
+    "regularTrainingJSON": {
+      "date": Timestamp.fromDate(DateTime.now()),
+      "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
+      "scope": Scope.SCOPE_51_55,
+      "result": [30, 39, 33, 0, 0],
+      "day": 1
+    },
+    "regularTrainingCompletedJSON": {
+      "date": Timestamp.fromDate(DateTime.now()),
+      "uid": "EvS0jZSzTdet2xK6gcxfVoZ5RMP2",
+      "scope": Scope.SCOPE_26_30,
+      "result": [30, 39, 33, 33, 41],
+      "day": 1
+    }
   };
 
   group('Training', () {
@@ -57,38 +82,76 @@ main() {
     pushups.initSchedule();
 
     group("create", () {
-      test('Test training from json', () {
-        var testTraining = TestTraining.fromJson(testTrainingJSON);
-        expect(testTraining.scope, Scope.TEST);
+      group("serie", () {
+        test('Test training from json', () {
+          var testTraining =
+              TestTraining.fromJson(trainingSerie['testTrainingJSON']);
+          expect(testTraining.scope, Scope.TEST);
+          expect(testTraining.result, 51);
+        });
+
+        test('regular training from json', () {
+          var regTraining =
+              RegularTraining.fromJson(trainingSerie['regularTrainingJSON']);
+          expect(regTraining.day, 1);
+          expect(regTraining.scope, Scope.SCOPE_51_55);
+          expect(regTraining.result, [30, 39, 33, 0, 0]);
+        });
+
+        test('regular training completed from json', () {
+          var regTraining = RegularTraining.fromJson(
+              trainingSerie['regularTrainingCompletedJSON']);
+          expect(regTraining.day, 1);
+          expect(regTraining.scope, Scope.SCOPE_26_30);
+          expect(regTraining.result, [30, 39, 33, 33, 41]);
+        });
       });
 
-      test('regular training from json', () {
-        var regTraining = RegularTraining.fromJson(regularTrainingJSON);
-        expect(regTraining.day, 1);
-        expect(regTraining.scope, Scope.SCOPE_51_55);
-        expect(regTraining.result, [30, 39, 33, 0, 0]);
+      group("result", () {
+        test('Test training from json', () {
+          var testTraining =
+              TestTraining.fromJson(trainingResult['testTrainingJSON']);
+          expect(testTraining.scope, Scope.TEST);
+          expect(testTraining.result, 51);
+        });
+
+        test('regular training from json', () {
+          var regTraining =
+              RegularTraining.fromJson(trainingResult['regularTrainingJSON']);
+          expect(regTraining.day, 1);
+          expect(regTraining.scope, Scope.SCOPE_51_55);
+          expect(regTraining.result, [30, 39, 33, 0, 0]);
+        });
+
+        test('regular training completed from json', () {
+          var regTraining = RegularTraining.fromJson(
+              trainingResult['regularTrainingCompletedJSON']);
+          expect(regTraining.day, 1);
+          expect(regTraining.scope, Scope.SCOPE_26_30);
+          expect(regTraining.result, [30, 39, 33, 33, 41]);
+        });
       });
     });
 
     group("completed", () {
       test('test completed', () {
         expect(
-            pushups
-                .isTrainingSucessfull(TestTraining.fromJson(testTrainingJSON)),
+            pushups.isTrainingSucessfull(
+                TestTraining.fromJson(trainingSerie['testTrainingJSON'])),
             true);
       });
 
       test('training not completed', () {
         expect(
             pushups.isTrainingSucessfull(
-                RegularTraining.fromJson(regularTrainingJSON)),
+                RegularTraining.fromJson(trainingSerie['regularTrainingJSON'])),
             false);
       });
 
       test('training completed', () {
         expect(
-            pushups.isTrainingSucessfull(
-                RegularTraining.fromJson(regularTrainingCompletedJSON)),
+            pushups.isTrainingSucessfull(RegularTraining.fromJson(
+                trainingSerie['regularTrainingCompletedJSON'])),
             true);
       });
     });

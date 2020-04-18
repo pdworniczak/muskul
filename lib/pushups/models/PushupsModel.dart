@@ -36,7 +36,9 @@ class PushupsModel extends ChangeNotifier {
             .snapshots()
             .listen(
           (data) {
+            print('DOCUMENTS: ${data.documents}');
             data.documents.forEach((document) {
+              print(document.data['scope']);
               if (document['scope'] == Scope.TEST) {
                 _trainings.add(TestTraining.fromJson(document.data));
               } else {
@@ -50,7 +52,13 @@ class PushupsModel extends ChangeNotifier {
   }
 
   Future saveTraining(TrainingModel training) {
-    return Firestore.instance.collection('pushups').document().setData(training.toJSON());
+    return FirebaseAuth.instance.currentUser().then((user) {
+      training.uid = user.uid;
+      return Firestore.instance
+          .collection('pushups')
+          .document()
+          .setData(training.toJSON());
+    });
   }
 
   void logoutUser() {
@@ -75,8 +83,11 @@ class PushupsModel extends ChangeNotifier {
   }
 
   TrainingModel getLastTraining() {
-    return _trainings.reduce((current, next) =>
-        current.date.compareTo(next.date) > 0 ? next : current);
+    if (_trainings.length > 0) {
+      return _trainings.reduce((current, next) =>
+          current.date.compareTo(next.date) > 0 ? next : current);
+    }
+    return null;
   }
 
   bool isLastTrainingOfScope(RegularTraining training) {
@@ -87,7 +98,9 @@ class PushupsModel extends ChangeNotifier {
   TrainingModel getNextTraining(TrainingModel training) {
     var date = Timestamp.fromDate(DateTime.now());
 
-    if (training is TestTraining) {
+    if (training != null) {
+      return TestTraining.emptyResult(date);
+    } else if (training is TestTraining) {
       return RegularTraining.emptyResult(
           Scope.getScopeOfTestResult(training.result), date, 1);
     } else if (training is RegularTraining) {

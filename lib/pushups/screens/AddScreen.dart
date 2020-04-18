@@ -19,19 +19,13 @@ class AddScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _AddScreenState();
   }
-
-  Map<int, int> _getCurrentTrainingSeries() {
-    final lastTraining =
-        pushupsModel.getNextTraining(pushupsModel.getLastTraining());
-
-    return Map.from(
-        pushupsModel.schedule.findTrainingScheduledSeries(lastTraining).series);
-  }
 }
 
 class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
+    var currentTraining = _getNextTraining();
+
     var series = _getScheduleSerieForNextTraining();
     var training = (widget.currentTraining as RegularTraining);
     // training.result.add(series[training.result.length + 1]);

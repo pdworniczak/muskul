@@ -18,8 +18,12 @@ class TrainingModel {
     return _date;
   }
 
+  void set uid(uid) {
+    _uid = uid;
+  }
+
   Map<String, dynamic> toJSON() {
-    return {'date': this._date, 'scope': this._scope};
+    return {'uid': this._uid, 'date': this._date, 'scope': this._scope};
   }
 }
 
@@ -34,7 +38,7 @@ class TestTraining extends TrainingModel {
       : super(trainingJson['scope'], trainingJson['date']) {
     _uid = trainingJson['uid'];
     _result = trainingJson.containsKey('result')
-        ? int.parse(trainingJson['result'])
+        ? trainingJson['result']
         : trainingJson['serie']['count'];
   }
 
@@ -73,8 +77,11 @@ class RegularTraining extends TrainingModel {
     _uid = trainingJson['uid'];
     _day = trainingJson['day'];
     _result = trainingJson.containsKey('result')
-        ? trainingJson['result']
-        : (trainingJson['serie'] as Map<int, int>).values.toList();
+        ? trainingJson['result'].cast<int>()
+        : (trainingJson['serie'] as Map<dynamic, dynamic>)
+            .values
+            .toList()
+            .cast<int>();
   }
 
   int get day {
