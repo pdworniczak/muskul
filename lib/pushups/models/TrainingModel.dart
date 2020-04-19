@@ -46,6 +46,10 @@ class TestTraining extends TrainingModel {
     return _result;
   }
 
+  set result(int result) {
+    this._result = result;
+  }
+
   @override
   Map<String, dynamic> toJSON() {
     var json = super.toJSON();

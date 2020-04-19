@@ -24,37 +24,15 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   @override
   Widget build(BuildContext context) {
-    var currentTraining = _getNextTraining();
-
-    var series = _getScheduleSerieForNextTraining();
-    var training = (widget.currentTraining as RegularTraining);
-    // training.result.add(series[training.result.length + 1]);
-
     return Scaffold(
       body: Center(
         child: Column(
           children: <Widget>[
             Spacer(),
             Text(widget.currentTraining.toString()),
-            Text(series.toString()),
-            ..._displayRegularTrainingForm(),
-            if (training.result.length < series.length)
-              RaisedButton(
-                child: Text(training.result.length > 0 ? 'Next' : 'Start'),
-                onPressed: () {
-                  setState(() {
-                    if (training.result.length != 0 &&
-                        training.result.last < series[training.result.length]) {
-                      _saveTraining(context);
-                    } else {
-                      training.result.add(series[training.result.length + 1]);
-                    }
-                  });
-                },
-              ),
-            if (training.result.length == series.length)
-              RaisedButton(
-                  child: Text('Save'), onPressed: () => _saveTraining(context)),
+            ...(widget.currentTraining is TestTraining
+                ? _displayTestTraining()
+                : _displayRegularTraining()),
             Spacer(),
           ],
         ),
@@ -67,16 +45,67 @@ class _AddScreenState extends State<AddScreen> {
         .getNextTraining(widget.pushupsModel.getLastTraining());
   }
 
-  Map<int, int> _getScheduleSerieForNextTraining() {
+  Map<int, int> _getScheduleSerieForTraining(RegularTraining training) {
     return widget.pushupsModel.schedule
-        .findTrainingScheduledSeries(_getNextTraining())
+        .findTrainingScheduledSeries(training)
         .series;
+  }
+
+  List<Widget> _displayTestTraining() {
+    var training = (widget.currentTraining as TestTraining);
+    return [
+      Row(children: <Widget>[
+        Spacer(),
+        RaisedButton(
+          child: Text('-'),
+          onPressed: () => setState(() {
+            --training.result;
+          }),
+        ),
+        Text(training.result.toString()),
+        RaisedButton(
+          child: Text('+'),
+          onPressed: () => setState(() {
+            ++training.result;
+          }),
+        ),
+        Spacer(),
+      ]),
+      RaisedButton(child: Text('Save'), onPressed: () => _saveTraining(context))
+    ];
+  }
+
+  List<Widget> _displayRegularTraining() {
+    var series = _getScheduleSerieForTraining(widget.currentTraining);
+    var training = (widget.currentTraining as RegularTraining);
+
+    return [
+      Text(series.toString()),
+      ..._displayRegularTrainingForm(),
+      if (training.result.length < series.length)
+        RaisedButton(
+          child: Text(training.result.length > 0 ? 'Next' : 'Start'),
+          onPressed: () {
+            setState(() {
+              if (training.result.length != 0 &&
+                  training.result.last < series[training.result.length]) {
+                _saveTraining(context);
+              } else {
+                training.result.add(series[training.result.length + 1]);
+              }
+            });
+          },
+        ),
+      if (training.result.length == series.length)
+        RaisedButton(
+            child: Text('Save'), onPressed: () => _saveTraining(context))
+    ];
   }
 
   List<Widget> _displayRegularTrainingForm() {
     List<Widget> entries = [];
     var training = (widget.currentTraining as RegularTraining);
-    var series = _getScheduleSerieForNextTraining();
+    var series = _getScheduleSerieForTraining(training);
 
     for (int i = 0; i < training.result.length; i++) {
       if (i == training.result.length - 1) {

@@ -36,6 +36,7 @@ class PushupsModel extends ChangeNotifier {
             .snapshots()
             .listen(
           (data) {
+            _trainings = [];
             print('DOCUMENTS: ${data.documents}');
             data.documents.forEach((document) {
               print(document.data['scope']);
@@ -98,9 +99,7 @@ class PushupsModel extends ChangeNotifier {
   TrainingModel getNextTraining(TrainingModel training) {
     var date = Timestamp.fromDate(DateTime.now());
 
-    if (training != null) {
-      return TestTraining.emptyResult(date);
-    } else if (training is TestTraining) {
+    if (training is TestTraining) {
       return RegularTraining.emptyResult(
           Scope.getScopeOfTestResult(training.result), date, 1);
     } else if (training is RegularTraining) {
@@ -114,6 +113,8 @@ class PushupsModel extends ChangeNotifier {
       } else {
         return RegularTraining.emptyResult(training.scope, date, 1);
       }
+    } else {
+      return TestTraining.emptyResult(date);
     }
   }
 }
