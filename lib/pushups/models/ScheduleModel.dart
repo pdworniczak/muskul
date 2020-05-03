@@ -28,8 +28,8 @@ class ScheduleScope {
   List<ScheduleDay> _days = [];
 
   ScheduleScope.fromJson(this._scope, Map<String, dynamic> scopeJson) {
-    scopeJson.forEach((day, value) {
-      _days.add(ScheduleDay.fromJson(int.parse(day), scopeJson));
+    scopeJson.forEach((day, serie) {
+      _days.add(ScheduleDay.fromJson(int.parse(day), serie));
     });
   }
 
@@ -52,10 +52,8 @@ class ScheduleDay {
   int _day;
   ScheduleSerie _series;
 
-  ScheduleDay.fromJson(this._day, Map<String, dynamic> dayJson) {
-    dayJson.forEach((day, value) {
-      _series = ScheduleSerie.fromJson(value);
-    });
+  ScheduleDay.fromJson(this._day, Map<String, dynamic> serie) {
+    _series = ScheduleSerie.fromJson(serie);
   }
 
   int get day {

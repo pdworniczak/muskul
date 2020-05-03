@@ -86,7 +86,7 @@ class PushupsModel extends ChangeNotifier {
   TrainingModel getLastTraining() {
     if (_trainings.length > 0) {
       return _trainings.reduce((current, next) =>
-          current.date.compareTo(next.date) > 0 ? next : current);
+          current.date.compareTo(next.date) > 0 ? current : next);
     }
     return null;
   }

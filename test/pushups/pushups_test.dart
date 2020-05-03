@@ -27,7 +27,14 @@ main() {
               .getDay(5)
               .series
               .getSerieExpectedResult(4),
-          13);
+          11);
+      expect(
+          schedule
+              .getScope(Scope.SCOPE_11_20)
+              .getDay(2)
+              .series
+              .getSerieExpectedResult(4),
+          8);
     });
   });
 
