@@ -22,7 +22,6 @@ class PushupsModel extends ChangeNotifier {
           await rootBundle.loadString('assets/pushups.json');
 
       this._schedule = ScheduleModel.fromJson(jsonDecode(scheduleString));
-      print('init schedule ${this._schedule}');
       notifyListeners();
     }
   }
