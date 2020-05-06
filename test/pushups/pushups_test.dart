@@ -192,7 +192,7 @@ main() {
 
         expect(
             nextTraining.toString(),
-            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 4)
                 .toString());
       });
 

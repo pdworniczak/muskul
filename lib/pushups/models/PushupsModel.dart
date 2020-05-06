@@ -46,6 +46,7 @@ class PushupsModel extends ChangeNotifier {
                 _trainings.add(RegularTraining.fromJson(document.data));
               }
             });
+            _trainings.sort((a, b) => b.date.compareTo(a.date));
           },
         );
       },

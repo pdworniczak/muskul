@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "682677280958",
-    "firebase_url": "https://muskul-dev.firebaseio.com",
-    "project_id": "muskul-dev",
-    "storage_bucket": "muskul-dev.appspot.com"
+    "project_number": "425724050597",
+    "firebase_url": "https://muskul-c195e.firebaseio.com",
+    "project_id": "muskul-c195e",
+    "storage_bucket": "muskul-c195e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:682677280958:android:149f13905264936a2c3eef",
+        "mobilesdk_app_id": "1:425724050597:android:3ef7496d15f781f7c7214c",
         "android_client_info": {
           "package_name": "pl.muskul.mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "682677280958-u2tumiua8ekl8jqcedjn7kk821umjcql.apps.googleusercontent.com",
+          "client_id": "425724050597-2kebp38ualunei8s2st9gnes2nagtj26.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCYPWqvC6Dxyuab7D-zwzv7QUbGXpvvIg4"
+          "current_key": "AIzaSyASpmWRTdDWKDJrJ4amNTpIsz0fnWrITJ4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "682677280958-u2tumiua8ekl8jqcedjn7kk821umjcql.apps.googleusercontent.com",
+              "client_id": "425724050597-2kebp38ualunei8s2st9gnes2nagtj26.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
