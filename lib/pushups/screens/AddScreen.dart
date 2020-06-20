@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:wakelock/wakelock.dart';
 import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
-
-import '../../navigation/navigation.dart' as navigation;
+import 'package:muskul/navigation/navigation.dart' as navigation;
 
 class AddScreen extends StatefulWidget {
   PushupsModel pushupsModel;
@@ -22,8 +22,17 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+
+ @override
+  void dispose() {
+    Wakelock.disable();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Wakelock.enable();
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -90,6 +99,7 @@ class _AddScreenState extends State<AddScreen> {
               if (training.result.length != 0 &&
                   training.result.last < series[training.result.length]) {
                 _saveTraining(context);
+                Wakelock.disable();
               } else {
                 training.result.add(series[training.result.length + 1]);
               }
@@ -98,7 +108,11 @@ class _AddScreenState extends State<AddScreen> {
         ),
       if (training.result.length == series.length)
         RaisedButton(
-            child: Text('Save'), onPressed: () => _saveTraining(context))
+            child: Text('Save'),
+            onPressed: () {
+              _saveTraining(context); 
+              Wakelock.disable();
+            })
     ];
   }
 
