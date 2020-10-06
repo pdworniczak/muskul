@@ -6,9 +6,8 @@ import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/navigation/navigation.dart' as navigation;
 
 class AddScreen extends StatefulWidget {
-  PushupsModel pushupsModel;
+  final PushupsModel pushupsModel;
   TrainingModel currentTraining;
-  bool finished = false;
 
   AddScreen(this.pushupsModel) {
     this.currentTraining =
@@ -47,11 +46,6 @@ class _AddScreenState extends State<AddScreen> {
         ),
       ),
     );
-  }
-
-  TrainingModel _getNextTraining() {
-    return widget.pushupsModel
-        .getNextTraining(widget.pushupsModel.getLastTraining());
   }
 
   Map<int, int> _getScheduleSerieForTraining(RegularTraining training) {

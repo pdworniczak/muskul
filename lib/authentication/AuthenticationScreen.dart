@@ -35,25 +35,29 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
               SizedBox(
                 height: 25,
               ),
-              Container(
-                width: 260,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(labelText: "email"),
-                      onSaved: (val) => email = val,
-                      validator: (value) =>
-                          value.isEmpty ? "Please enter valid email." : null,
-                    ),
-                    TextFormField(
-                        decoration: InputDecoration(
-                          labelText: "password",
-                        ),
-                        obscureText: true,
-                        onSaved: (val) => password = val,
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                  width: 260,
+                  child: Column(
+                    children: <Widget>[
+                      TextFormField(
+                        decoration: InputDecoration(labelText: "email"),
+                        onSaved: (val) => email = val,
                         validator: (value) =>
-                            value.isEmpty ? "Please enter password." : null),
-                  ],
+                            value.isEmpty ? "Please enter valid email." : null,
+                      ),
+                      TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "password",
+                          ),
+                          obscureText: true,
+                          onSaved: (val) => password = val,
+                          validator: (value) =>
+                              value.isEmpty ? "Please enter password." : null),
+                    ],
+                  ),
                 ),
               ),
               RaisedButton(
