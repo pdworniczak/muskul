@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/pushups/models/PushupsModel.dart';
@@ -11,44 +12,55 @@ class ListScreen extends StatelessWidget {
       builder: (context, pushups, _) {
         pushups.getTrainings();
 
-        return Column(
-          children: [
-            Spacer(),
-            Text("List"),
-            ...pushups.trainings
-                .map((TrainingModel document) => Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(document.date.toDate().toString()),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        return Scaffold(
+            appBar: AppBar(
+              title: Text('Lista'),
+            ),
+            body: Container(
+              child: ListView(
+                children: [
+                  ...pushups.trainings.map((TrainingModel training) {
+                    if (training.runtimeType == RegularTraining) {
+                      return Row(
+                        children: <Widget>[
+                          Expanded(
+                              flex: 3,
+                              child: Text(new DateFormat.yMd()
+                                  .format(training.date.toDate()))),
+                          Expanded(flex: 2, child: Text(training.scope)),
+                          Expanded(
+                              flex: 1,
+                              child: Text((training as RegularTraining)
+                                  .day
+                                  .toString())),
+                          Expanded(
+                              flex: 5,
+                              child: Text((training as RegularTraining)
+                                  .result
+                                  .toString())),
+                        ],
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      );
+                    } else if (training.runtimeType == TestTraining) {
+                      return Column(children: [
+                        Center(
+                          child: Text('TEST'),
                         ),
                         Row(
-                          children: <Widget>[
-                            Text(document.scope),
-                            ...(document.runtimeType == TestTraining)
-                                ? [
-                                    Text((document as TestTraining)
-                                        .result
-                                        .toString())
-                                  ]
-                                : [
-                                    Text((document as RegularTraining)
-                                        .day
-                                        .toString()),
-                                    Text((document as RegularTraining)
-                                        .result
-                                        .toString()),
-                                  ],
+                          children: [
+                            Text(new DateFormat.yMd()
+                                .format(training.date.toDate())),
+                            Text((training as TestTraining).result.toString()),
                           ],
-                        )
-                      ],
-                    ))
-                .toList(),
-            Spacer(),
-          ],
-        );
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        ),
+                      ]);
+                    }
+                  }).toList(),
+                ],
+              ),
+              padding: EdgeInsets.all(10),
+            ));
       },
     ));
   }

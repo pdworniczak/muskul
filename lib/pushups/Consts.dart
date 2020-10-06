@@ -1,5 +1,3 @@
-import 'package:intl/intl.dart';
-
 class Scope {
   static const TEST = 'TEST';
   static const SCOPE_0_5 = '0-5';

@@ -21,8 +21,7 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
-
- @override
+  @override
   void dispose() {
     Wakelock.disable();
     super.dispose();
@@ -104,7 +103,7 @@ class _AddScreenState extends State<AddScreen> {
         RaisedButton(
             child: Text('Save'),
             onPressed: () {
-              _saveTraining(context); 
+              _saveTraining(context);
               Wakelock.disable();
             })
     ];

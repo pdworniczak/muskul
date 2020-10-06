@@ -18,7 +18,7 @@ class TrainingModel {
     return _date;
   }
 
-  void set uid(uid) {
+  set uid(uid) {
     _uid = uid;
   }
 
