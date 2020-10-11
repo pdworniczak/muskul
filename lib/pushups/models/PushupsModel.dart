@@ -96,6 +96,14 @@ class PushupsModel extends ChangeNotifier {
     return scheduleScope.lastDay.day == training.day;
   }
 
+  bool isTrainingMoreThanAWeekAgo(RegularTraining training) {
+    return DateTime.now().difference(training.date.toDate()).inDays > 7;
+  }
+
+  bool isTrainingMoreThanAMonthAgo(RegularTraining training) {
+    return DateTime.now().difference(training.date.toDate()).inDays > 28;
+  }
+
   TrainingModel getNextTraining(TrainingModel training) {
     var date = Timestamp.fromDate(DateTime.now());
 
@@ -103,7 +111,11 @@ class PushupsModel extends ChangeNotifier {
       return RegularTraining.emptyResult(
           Scope.getScopeOfTestResult(training.result), date, 1);
     } else if (training is RegularTraining) {
-      if (isTrainingSucessfull(training)) {
+      if (isTrainingMoreThanAMonthAgo(training)) {
+        return TestTraining.emptyResult(date);
+      } else if (isTrainingMoreThanAWeekAgo(training)) {
+        return RegularTraining.emptyResult(training.scope, date, 1);
+      } else if (isTrainingSucessfull(training)) {
         if (isLastTrainingOfScope(training)) {
           return TestTraining.emptyResult(date);
         } else {

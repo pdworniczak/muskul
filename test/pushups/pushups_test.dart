@@ -84,7 +84,7 @@ main() {
     }
   };
 
-  group('Training', () {
+  group('Training =>', () {
     var pushups = PushupsModel();
     pushups.initSchedule();
 
@@ -163,7 +163,7 @@ main() {
       });
     });
 
-    group("next", () {
+    group("next =>", () {
       var date = Timestamp.fromDate(DateTime.now());
       test("test", () {
         var training = TestTraining(date, 16);
@@ -183,6 +183,69 @@ main() {
             nextTraining.toString(),
             RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
                 .toString());
+      });
+
+      test("fail in last serie", () {
+        var training =
+            RegularTraining(Scope.SCOPE_11_20, date, 3, [11, 13, 9, 9, 12]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("last training one week ago", () {
+        var training = RegularTraining(
+            Scope.SCOPE_11_20,
+            Timestamp.fromDate(date.toDate().add(new Duration(days: 7))),
+            3,
+            [11, 13, 9, 9, 13]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 4)
+                .toString());
+      });
+
+      test("last training more than one week ago", () {
+        var training = RegularTraining(
+            Scope.SCOPE_11_20,
+            Timestamp.fromDate(date.toDate().subtract(new Duration(days: 8))),
+            3,
+            [11, 13, 9, 9, 13]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("last training 4 weeks ago", () {
+        var previouseTrainingDate =
+            new DateTime.now().subtract(new Duration(days: 28));
+        var training = RegularTraining(Scope.SCOPE_11_20,
+            Timestamp.fromDate(previouseTrainingDate), 3, [11, 13, 9, 9, 13]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(
+            nextTraining.toString(),
+            RegularTraining.emptyResult(Scope.SCOPE_11_20, nextTraining.date, 1)
+                .toString());
+      });
+
+      test("last training more than 4 weels ago", () {
+        var previouseTrainingDate =
+            new DateTime.now().subtract(new Duration(days: 29));
+        var training = RegularTraining(Scope.SCOPE_11_20,
+            Timestamp.fromDate(previouseTrainingDate), 3, [11, 13, 9, 9, 13]);
+        var nextTraining = pushups.getNextTraining(training);
+
+        expect(nextTraining.toString(),
+            TestTraining.emptyResult(nextTraining.date).toString());
       });
 
       test("success", () {
