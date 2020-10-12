@@ -17,11 +17,11 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
   String email = "";
   String password = "";
+  bool isError = false;
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
-    var pushupsModel = Provider.of<PushupsModel>(context);
-
     return Material(
       child: Container(
         child: Form(
@@ -44,47 +44,56 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                     children: <Widget>[
                       TextFormField(
                         decoration: InputDecoration(labelText: "email"),
+                        onChanged: (val) {
+                          isError = false;
+                        },
                         onSaved: (val) => email = val,
-                        validator: (value) =>
-                            value.isEmpty ? "Please enter valid email." : null,
+                        validator: (value) => value.isEmpty
+                            ? "Proszę podać prawidłowy email."
+                            : null,
                       ),
                       TextFormField(
                           decoration: InputDecoration(
-                            labelText: "password",
+                            labelText: "hasło",
                           ),
                           obscureText: true,
+                          onChanged: (val) {
+                            isError = false;
+                          },
                           onSaved: (val) => password = val,
                           validator: (value) =>
-                              value.isEmpty ? "Please enter password." : null),
+                              value.isEmpty ? "Proszę podać hasło." : null),
                     ],
                   ),
                 ),
               ),
-              RaisedButton(
-                  child: Text("Log In"),
-                  onPressed: () {
-                    FormState authenticationFormState =
-                        _authenticationFormKey.currentState;
-                    authenticationFormState.save();
-                    if (authenticationFormState.validate()) {
-                      print("email: $email password: $password");
-
-                      FirebaseAuth.instance
-                          .signInWithEmailAndPassword(
-                              email: email, password: password)
-                          .then(
-                        (result) {
-                          pushupsModel.getTrainings();
-                          navigation.toNavigation(context);
-                        },
-                      );
-                    }
-                  }),
+              RaisedButton(child: Text("Zaloguj"), onPressed: login(context)),
+              Text('isError $isError'),
               Spacer(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Function login(BuildContext context) {
+    var pushupsModel = Provider.of<PushupsModel>(context);
+
+    return () async {
+      FormState authenticationFormState = _authenticationFormKey.currentState;
+      authenticationFormState.save();
+      if (authenticationFormState.validate()) {
+        print("email: $email password: $password");
+
+        try {
+          var user = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(email: email, password: password);
+        } on FirebaseAuthException catch (e) {
+          isError = true;
+          print('FirebaseAuthException');
+        }
+      }
+    };
   }
 }

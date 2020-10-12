@@ -27,39 +27,34 @@ class PushupsModel extends ChangeNotifier {
   }
 
   void getTrainings() {
-    FirebaseAuth.instance.currentUser().then(
-      (user) {
-        Firestore.instance
-            .collection('pushups')
-            .where('uid', isEqualTo: user.uid)
-            .snapshots()
-            .listen(
-          (data) {
-            _trainings = [];
-            print('DOCUMENTS: ${data.documents}');
-            data.documents.forEach((document) {
-              print(document.data['scope']);
-              if (document['scope'] == Scope.TEST) {
-                _trainings.add(TestTraining.fromJson(document.data));
-              } else {
-                _trainings.add(RegularTraining.fromJson(document.data));
-              }
-            });
-            _trainings.sort((a, b) => b.date.compareTo(a.date));
-          },
-        );
-      },
-    );
+    var user = FirebaseAuth.instance.currentUser;
+    FirebaseFirestore.instance
+        .collection('pushups')
+        .where('uid', isEqualTo: user.uid)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      _trainings = [];
+      print('DOCUMENTS: ${querySnapshot.docs}');
+      querySnapshot.docs.forEach((doc) {
+        print(doc);
+
+        if (doc['scope'] == Scope.TEST) {
+          _trainings.add(TestTraining.fromJson(doc.data()));
+        } else {
+          _trainings.add(RegularTraining.fromJson(doc.data()));
+        }
+      });
+      _trainings.sort((a, b) => b.date.compareTo(a.date));
+    });
   }
 
   Future saveTraining(TrainingModel training) {
-    return FirebaseAuth.instance.currentUser().then((user) {
-      training.uid = user.uid;
-      return Firestore.instance
-          .collection('pushups')
-          .document()
-          .setData(training.toJSON());
-    });
+    var user = FirebaseAuth.instance.currentUser;
+    training.uid = user.uid;
+    return FirebaseFirestore.instance
+        .collection('pushups')
+        .doc()
+        .set(training.toJSON());
   }
 
   void logoutUser() {
