@@ -45,7 +45,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       TextFormField(
                         decoration: InputDecoration(labelText: "email"),
                         onChanged: (val) {
-                          isError = false;
+                          setState(() {
+                            isError = false;
+                          });
                         },
                         onSaved: (val) => email = val,
                         validator: (value) => value.isEmpty
@@ -58,17 +60,28 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           ),
                           obscureText: true,
                           onChanged: (val) {
-                            isError = false;
+                            setState(() {
+                              isError = false;
+                            });
                           },
                           onSaved: (val) => password = val,
                           validator: (value) =>
                               value.isEmpty ? "Proszę podać hasło." : null),
+                      RaisedButton(
+                          child: Text("Zaloguj"), onPressed: login(context)),
+                      Visibility(
+                        child: Text(
+                          'Błędny login lub hasło',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Color.fromRGBO(255, 0, 0, 1)),
+                        ),
+                        visible: isError,
+                      ),
                     ],
                   ),
                 ),
               ),
-              RaisedButton(child: Text("Zaloguj"), onPressed: login(context)),
-              Text('isError $isError'),
               Spacer(),
             ],
           ),
@@ -89,9 +102,13 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         try {
           var user = await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
+          pushupsModel.getTrainings();
+          navigation.toNavigation(context);
         } on FirebaseAuthException catch (e) {
-          isError = true;
-          print('FirebaseAuthException');
+          setState(() {
+            isError = true;
+          });
+          print('FirebaseAuthException ${e.message}');
         }
       }
     };
