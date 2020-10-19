@@ -88,8 +88,8 @@ main() {
     var pushups = PushupsModel();
     pushups.initSchedule();
 
-    group("create", () {
-      group("serie", () {
+    group("create =>", () {
+      group("serie =>", () {
         test('Test training from json', () {
           var testTraining =
               TestTraining.fromJson(trainingSerie['testTrainingJSON']);
@@ -140,7 +140,7 @@ main() {
       });
     });
 
-    group("completed", () {
+    group("result =>", () {
       test('test completed', () {
         expect(
             pushups.isTrainingSucessfull(

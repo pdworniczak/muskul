@@ -16,50 +16,88 @@ class ListScreen extends StatelessWidget {
             appBar: AppBar(
               title: Text('Lista'),
             ),
-            body: Container(
-              child: ListView(
+            body: Padding(
+              padding: EdgeInsets.all(20),
+              child: Table(
+                border: TableBorder(horizontalInside: BorderSide(width: 1)),
+                columnWidths: {
+                  0: IntrinsicColumnWidth(),
+                  1: IntrinsicColumnWidth(),
+                  2: IntrinsicColumnWidth(),
+                  3: FlexColumnWidth(1),
+                },
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 children: [
+                  TableRow(children: [
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text('data'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text('zakres'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: Text('dzień'),
+                    ),
+                    Padding(padding: EdgeInsets.all(5), child: Text('wynik')),
+                  ]),
                   ...pushups.trainings.map((TrainingModel training) {
                     if (training.runtimeType == RegularTraining) {
-                      return Row(
+                      return TableRow(
                         children: <Widget>[
-                          Expanded(
-                              flex: 3,
-                              child: Text(new DateFormat.yMd()
-                                  .format(training.date.toDate()))),
-                          Expanded(flex: 2, child: Text(training.scope)),
-                          Expanded(
-                              flex: 1,
-                              child: Text((training as RegularTraining)
-                                  .day
-                                  .toString())),
-                          Expanded(
-                              flex: 5,
-                              child: Text((training as RegularTraining)
-                                  .result
-                                  .toString())),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(new DateFormat.yMd()
+                                .format(training.date.toDate())),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(training.scope),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                                (training as RegularTraining).day.toString()),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text((training as RegularTraining)
+                                .result
+                                .toString()
+                                .replaceAll('[', '')
+                                .replaceAll(']', '')),
+                          ),
                         ],
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       );
                     } else if (training.runtimeType == TestTraining) {
-                      return Column(children: [
-                        Center(
-                          child: Text('TEST'),
-                        ),
-                        Row(
-                          children: [
-                            Text(new DateFormat.yMd()
+                      return TableRow(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(new DateFormat.yMd()
                                 .format(training.date.toDate())),
-                            Text((training as TestTraining).result.toString()),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        ),
-                      ]);
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text('TEST'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text('-'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                                (training as TestTraining).result.toString()),
+                          ),
+                        ],
+                      );
                     }
                   }).toList(),
                 ],
               ),
-              padding: EdgeInsets.all(10),
             ));
       },
     ));
