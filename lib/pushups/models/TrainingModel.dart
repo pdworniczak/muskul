@@ -16,6 +16,7 @@ class TrainingModel {
 
   Timestamp get date {
     return _date;
+    
   }
 
   set uid(uid) {

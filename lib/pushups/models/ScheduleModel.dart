@@ -89,6 +89,10 @@ class ScheduleSerie {
 
   @override
   String toString() {
-    return '$_series';
+    StringBuffer series = new StringBuffer('');
+
+    _series.forEach((key, value) => series.write("$key: $value  "));
+
+    return series.toString();
   }
 }

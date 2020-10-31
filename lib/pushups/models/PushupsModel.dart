@@ -27,6 +27,7 @@ class PushupsModel extends ChangeNotifier {
   }
 
   void getTrainings() {
+    print('getTrainings');
     var user = FirebaseAuth.instance.currentUser;
     FirebaseFirestore.instance
         .collection('pushups')
