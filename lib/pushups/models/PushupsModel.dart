@@ -65,9 +65,14 @@ class PushupsModel extends ChangeNotifier {
   bool isTrainingSucessfull(TrainingModel training) {
     if (training.scope == Scope.TEST) {
       return true;
-    }
+    } else {}
 
     var seriesSchedule = schedule.findTrainingScheduledSeries(training);
+
+    if (seriesSchedule.series.length >
+        (training as RegularTraining).result.length) {
+      return false;
+    }
 
     for (int i = 0; i < seriesSchedule.series.length; i++) {
       if ((training as RegularTraining).result[i] <
