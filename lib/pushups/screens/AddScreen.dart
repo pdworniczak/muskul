@@ -137,7 +137,7 @@ class _AddScreenState extends State<AddScreen> {
                                 scheduledSeries.getSerieExpectedResult(
                                     training.result.length + 1));
                             setState(() {
-                              widget._time = 1;
+                              widget._time = 60;
                             });
                             var interval = new Duration(seconds: 1);
                             widget._timer =
