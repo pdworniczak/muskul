@@ -39,8 +39,8 @@ class NavigationScreen extends StatelessWidget {
               ),
             ),
             RaisedButton(
-                child: Text("Lista"),
-                onPressed: () => navigation.toList(context)),
+                child: Text("Historia"),
+                onPressed: () => navigation.toHistory(context)),
             Spacer(flex: 2),
           ],
         ),

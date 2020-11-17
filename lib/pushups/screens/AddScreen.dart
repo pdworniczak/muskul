@@ -216,7 +216,7 @@ class _AddScreenState extends State<AddScreen> {
     });
     widget.pushupsModel.saveTraining(widget._currentTraining).then((result) {
       print('SUCCESS ${result.toString()}');
-      navigation.toListReplace(context);
+      navigation.toHistoryReplace(context);
     }).catchError((error) {
       print('ERROR ${error.toString()}');
     }).whenComplete(() {
@@ -229,15 +229,14 @@ class _AddScreenState extends State<AddScreen> {
   Widget _header(TrainingModel training) {
     var series = _getScheduleSerieForTraining(widget._currentTraining);
 
-    List<Widget> header = [
-      Text(new DateFormat.yMd().format(training.date.toDate())),
-    ];
+    List<Widget> header = [];
     if (training is RegularTraining) {
       header.add(Text("dzień: ${training.day}"));
       header.add(Text("serie: ${series.toString()}"));
     }
 
     return Column(children: [
+      Text(new DateFormat.yMd().format(training.date.toDate())),
       Text(
         training.scope,
         textScaleFactor: 2,
