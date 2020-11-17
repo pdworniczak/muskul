@@ -137,7 +137,7 @@ class _AddScreenState extends State<AddScreen> {
                                 scheduledSeries.getSerieExpectedResult(
                                     training.result.length + 1));
                             setState(() {
-                              widget._time = 60;
+                              widget._time = 1;
                             });
                             var interval = new Duration(seconds: 1);
                             widget._timer =
@@ -216,7 +216,7 @@ class _AddScreenState extends State<AddScreen> {
     });
     widget.pushupsModel.saveTraining(widget._currentTraining).then((result) {
       print('SUCCESS ${result.toString()}');
-      navigation.toList(context);
+      navigation.toListReplace(context);
     }).catchError((error) {
       print('ERROR ${error.toString()}');
     }).whenComplete(() {

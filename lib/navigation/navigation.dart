@@ -29,3 +29,8 @@ toAdd(BuildContext context) {
     return AddScreen(pushupsModel);
   }));
 }
+
+toListReplace(BuildContext context) {
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => ListScreen()));
+}
