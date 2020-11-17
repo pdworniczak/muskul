@@ -14,6 +14,7 @@ class AddScreen extends StatefulWidget {
   TrainingModel _currentTraining;
   int _time = 0;
   Timer _timer;
+  bool _isSaving = false;
 
   AddScreen(this.pushupsModel) {
     this._currentTraining =
@@ -85,7 +86,10 @@ class _AddScreenState extends State<AddScreen> {
         ],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
-      RaisedButton(child: Text('Save'), onPressed: () => _saveTraining(context))
+      RaisedButton(
+          child: Text(widget._isSaving ? 'Saveing...' : 'Save'),
+          disabledColor: Colors.grey,
+          onPressed: widget._isSaving ? null : () => _saveTraining(context))
     ];
   }
 
@@ -207,11 +211,18 @@ class _AddScreenState extends State<AddScreen> {
   void _saveTraining(BuildContext context) {
     print(widget._currentTraining);
 
+    setState(() {
+      widget._isSaving = true;
+    });
     widget.pushupsModel.saveTraining(widget._currentTraining).then((result) {
       print('SUCCESS ${result.toString()}');
       navigation.toList(context);
     }).catchError((error) {
       print('ERROR ${error.toString()}');
+    }).whenComplete(() {
+      setState(() {
+        widget._isSaving = false;
+      });
     });
   }
 
