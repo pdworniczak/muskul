@@ -9,9 +9,12 @@ import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/navigation/navigation.dart' as navigation;
 
+const WAIT_TIME = 60;
+
 class AddScreen extends StatefulWidget {
   final PushupsModel pushupsModel;
   TrainingModel _currentTraining;
+  int _currentResult = 0;
   int _time = 0;
   Timer _timer;
   bool _isSaving = false;
@@ -87,7 +90,7 @@ class _AddScreenState extends State<AddScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
       ),
       RaisedButton(
-          child: Text(widget._isSaving ? 'Saveing...' : 'Save'),
+          child: Text(widget._isSaving ? 'Zapisywanie...' : 'Zapisz'),
           disabledColor: Colors.grey,
           onPressed: widget._isSaving ? null : () => _saveTraining(context))
     ];
@@ -97,67 +100,83 @@ class _AddScreenState extends State<AddScreen> {
     var scheduledSeries = _getScheduleSerieForTraining(widget._currentTraining);
     var training = (widget._currentTraining as RegularTraining);
 
-    var isFirstSeries = () => training.result.length == 0;
+    print(
+        '${widget._currentResult} ${training.result.length} ${scheduledSeries.getSerieExpectedResult(1)}');
+
+    var isFirstSeries =
+        () => training.result.length == 0 && widget._currentResult == 0;
     var isSerieSuccessful = () =>
-        training.result.last >=
+        widget._currentResult >=
         scheduledSeries.getSerieExpectedResult(training.result.length);
-    var allSeriesFinished =
+    var isLastSerie =
+        () => training.result.length + 1 == scheduledSeries.series.length;
+    var isTrainingFinished =
         () => training.result.length == scheduledSeries.series.length;
 
-    return [
-      ..._displayRegularTrainingForm(),
-      isFirstSeries()
-          ? RaisedButton(
-              child: Text('Start'),
-              onPressed: () {
-                setState(() {
-                  training.result.add(scheduledSeries
-                      .getSerieExpectedResult(training.result.length + 1));
-                });
-              },
-            )
-          : allSeriesFinished()
-              ? RaisedButton(
-                  child: Text('Save'),
+    return isTrainingFinished()
+        ? [
+            Text(widget.pushupsModel.isTrainingSucessfull(training)
+                ? 'SUKCES!'
+                : 'Może uda się następnym razem.')
+          ]
+        : isFirstSeries()
+            ? [
+                RaisedButton(
+                  child: Text('Start'),
                   onPressed: () {
-                    _saveTraining(context);
-                    Wakelock.disable();
-                  })
-              : (widget._time > 0)
-                  ? Padding(
-                      child: Text('${widget._time}'),
-                      padding: EdgeInsets.all(5),
-                    )
-                  : RaisedButton(
-                      child: Text('Next'),
-                      onPressed: () {
-                        setState(() {
-                          if (isSerieSuccessful()) {
-                            training.result.add(
-                                scheduledSeries.getSerieExpectedResult(
-                                    training.result.length + 1));
-                            setState(() {
-                              widget._time = 60;
-                            });
-                            var interval = new Duration(seconds: 1);
-                            widget._timer =
-                                new Timer.periodic(interval, (Timer timer) {
-                              if (widget._time > 0) {
-                                setState(() {
-                                  widget._time -= 1;
-                                });
-                              } else {
-                                widget._timer.cancel();
-                              }
-                            });
-                          } else {
-                            _saveTraining(context);
-                            Wakelock.disable();
-                          }
-                        });
-                      },
-                    ),
-    ];
+                    setState(() {
+                      widget._currentResult =
+                          scheduledSeries.getSerieExpectedResult(1);
+                    });
+                  },
+                )
+              ]
+            : [
+                ..._displayRegularTrainingForm(),
+                isLastSerie()
+                    ? RaisedButton(
+                        child: Text('Zapisz'),
+                        onPressed: () {
+                          training.result.add(widget._currentResult);
+                          _saveTraining(context);
+                          Wakelock.disable();
+                        })
+                    : (widget._time > 0)
+                        ? Padding(
+                            child: Text('${widget._time}'),
+                            padding: EdgeInsets.all(5),
+                          )
+                        : RaisedButton(
+                            child: Text('Następna'),
+                            onPressed: () {
+                              setState(() {
+                                training.result.add(widget._currentResult);
+                                if (isSerieSuccessful()) {
+                                  widget._currentResult =
+                                      scheduledSeries.getSerieExpectedResult(
+                                          training.result.length + 1);
+                                  setState(() {
+                                    widget._time = WAIT_TIME;
+                                  });
+                                  var interval = new Duration(seconds: 1);
+                                  widget._timer = new Timer.periodic(interval,
+                                      (Timer timer) {
+                                    if (widget._time > 0) {
+                                      setState(() {
+                                        widget._time -= 1;
+                                      });
+                                    } else {
+                                      widget._timer.cancel();
+                                    }
+                                  });
+                                } else {
+                                  _saveTraining(context);
+                                  Wakelock.disable();
+                                }
+                              });
+                            },
+                          ),
+              ];
   }
 
   List<Widget> _displayRegularTrainingForm() {
@@ -165,8 +184,8 @@ class _AddScreenState extends State<AddScreen> {
     var training = (widget._currentTraining as RegularTraining);
     var scheduledSeries = _getScheduleSerieForTraining(training);
 
-    for (int i = 0; i < training.result.length; i++) {
-      if (i == training.result.length - 1) {
+    for (int i = 0; i <= training.result.length; i++) {
+      if (i == training.result.length) {
         if (widget._time == 0) {
           entries.add(Column(children: <Widget>[
             Row(children: <Widget>[
@@ -176,13 +195,13 @@ class _AddScreenState extends State<AddScreen> {
                 child: RaisedButton(
                   child: Text('-'),
                   onPressed: () => setState(() {
-                    --training.result[i];
+                    --widget._currentResult;
                   }),
                 ),
               ),
-              Text(training.result[i].toString(),
+              Text(widget._currentResult.toString(),
                   style: TextStyle(
-                    color: (training.result[i] >=
+                    color: (widget._currentResult >=
                             scheduledSeries.getSerieExpectedResult(i + 1))
                         ? Colors.green
                         : Colors.red,
@@ -192,7 +211,7 @@ class _AddScreenState extends State<AddScreen> {
                 child: RaisedButton(
                   child: Text('+'),
                   onPressed: () => setState(() {
-                    ++training.result[i];
+                    ++widget._currentResult;
                   }),
                 ),
               ),
@@ -209,8 +228,6 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   void _saveTraining(BuildContext context) {
-    print(widget._currentTraining);
-
     setState(() {
       widget._isSaving = true;
     });
@@ -243,7 +260,7 @@ class _AddScreenState extends State<AddScreen> {
       ),
       Container(
         margin: EdgeInsets.all(20),
-        child: Row(
+        child: Column(
           children: header,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
