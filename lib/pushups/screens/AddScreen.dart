@@ -233,7 +233,9 @@ class _AddScreenState extends State<AddScreen> {
     });
     widget.pushupsModel.saveTraining(widget._currentTraining).then((result) {
       print('SUCCESS ${result.toString()}');
-      navigation.toHistoryReplace(context);
+      widget.pushupsModel.getTrainings().whenComplete(() => setState(() {
+            navigation.toHistoryReplace(context);
+          }));
     }).catchError((error) {
       print('ERROR ${error.toString()}');
     }).whenComplete(() {

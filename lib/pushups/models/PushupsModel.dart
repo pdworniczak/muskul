@@ -26,10 +26,10 @@ class PushupsModel extends ChangeNotifier {
     }
   }
 
-  void getTrainings() {
+  Future getTrainings() {
     print('getTrainings');
     var user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection('pushups')
         .where('uid', isEqualTo: user.uid)
         .get()

@@ -10,8 +10,6 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(child: Consumer<PushupsModel>(
       builder: (context, pushups, _) {
-        pushups.getTrainings();
-
         return Scaffold(
             appBar: AppBar(
               title: Text('Historia'),

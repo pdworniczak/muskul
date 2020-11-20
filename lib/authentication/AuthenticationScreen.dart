@@ -100,9 +100,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         print("email: $email password: $password");
 
         try {
-          var user = await FirebaseAuth.instance
+          await FirebaseAuth.instance
               .signInWithEmailAndPassword(email: email, password: password);
-          pushupsModel.getTrainings();
+          await pushupsModel.getTrainings();
           navigation.toNavigation(context);
         } on FirebaseAuthException catch (e) {
           setState(() {
