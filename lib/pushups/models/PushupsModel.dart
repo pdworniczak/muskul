@@ -65,7 +65,7 @@ class PushupsModel extends ChangeNotifier {
   bool isTrainingSucessfull(TrainingModel training) {
     if (training.scope == Scope.TEST) {
       return true;
-    } else {}
+    }
 
     var seriesSchedule = schedule.findTrainingScheduledSeries(training);
 
@@ -82,6 +82,28 @@ class PushupsModel extends ChangeNotifier {
     }
 
     return true;
+  }
+
+  bool isTrainingFinished(TrainingModel training) {
+    if (training.scope == Scope.TEST) {
+      return true;
+    }
+
+    var regTraining = (training as RegularTraining);
+
+    var seriesSchedule = schedule.findTrainingScheduledSeries(training);
+
+    if (seriesSchedule.series.length == regTraining.result.length) {
+      return true;
+    }
+
+    for (int i = 0; i < regTraining.result.length; i++) {
+      if (regTraining.result[i] < seriesSchedule.series[i + 1]) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   TrainingModel getLastTraining() {

@@ -50,9 +50,18 @@ class _AddScreenState extends State<AddScreen> {
           children: <Widget>[
             Spacer(),
             _header(widget._currentTraining),
-            ...(widget._currentTraining is TestTraining
-                ? _displayTestTraining()
-                : _displayRegularTraining()),
+            ...widget._isSaving ||
+                    widget.pushupsModel
+                        .isTrainingFinished(widget._currentTraining)
+                ? [
+                    Text(widget.pushupsModel
+                            .isTrainingSucessfull(widget._currentTraining)
+                        ? 'SUKCES!'
+                        : 'Może uda się następnym razem.')
+                  ]
+                : widget._currentTraining is TestTraining
+                    ? _displayTestTraining()
+                    : _displayRegularTraining(),
             Spacer(),
           ],
         ),
@@ -110,73 +119,65 @@ class _AddScreenState extends State<AddScreen> {
         scheduledSeries.getSerieExpectedResult(training.result.length);
     var isLastSerie =
         () => training.result.length + 1 == scheduledSeries.series.length;
-    var isTrainingFinished =
-        () => training.result.length == scheduledSeries.series.length;
 
-    return isTrainingFinished()
+    return isFirstSeries()
         ? [
-            Text(widget.pushupsModel.isTrainingSucessfull(training)
-                ? 'SUKCES!'
-                : 'Może uda się następnym razem.')
+            RaisedButton(
+              child: Text('Start'),
+              onPressed: () {
+                setState(() {
+                  widget._currentResult =
+                      scheduledSeries.getSerieExpectedResult(1);
+                });
+              },
+            )
           ]
-        : isFirstSeries()
-            ? [
-                RaisedButton(
-                  child: Text('Start'),
-                  onPressed: () {
-                    setState(() {
-                      widget._currentResult =
-                          scheduledSeries.getSerieExpectedResult(1);
-                    });
-                  },
-                )
-              ]
-            : [
-                ..._displayRegularTrainingForm(),
-                isLastSerie()
-                    ? RaisedButton(
-                        child: Text('Zapisz'),
+        : [
+            ..._displayRegularTrainingForm(),
+            isLastSerie()
+                ? RaisedButton(
+                    child: Text('Zapisz'),
+                    onPressed: () {
+                      training.result.add(widget._currentResult);
+                      _saveTraining(context);
+                      Wakelock.disable();
+                    })
+                : (widget._time > 0)
+                    ? Padding(
+                        child: Text('${widget._time}'),
+                        padding: EdgeInsets.all(5),
+                      )
+                    : RaisedButton(
+                        child: Text('Następna'),
                         onPressed: () {
-                          training.result.add(widget._currentResult);
-                          _saveTraining(context);
-                          Wakelock.disable();
-                        })
-                    : (widget._time > 0)
-                        ? Padding(
-                            child: Text('${widget._time}'),
-                            padding: EdgeInsets.all(5),
-                          )
-                        : RaisedButton(
-                            child: Text('Następna'),
-                            onPressed: () {
+                          setState(() {
+                            training.result.add(widget._currentResult);
+                            if (isSerieSuccessful()) {
+                              widget._currentResult =
+                                  scheduledSeries.getSerieExpectedResult(
+                                      training.result.length + 1);
                               setState(() {
-                                training.result.add(widget._currentResult);
-                                if (isSerieSuccessful()) {
-                                  widget._currentResult =
-                                      scheduledSeries.getSerieExpectedResult(
-                                          training.result.length + 1);
+                                widget._time = WAIT_TIME;
+                              });
+                              var interval = new Duration(seconds: 1);
+                              widget._timer =
+                                  new Timer.periodic(interval, (Timer timer) {
+                                if (widget._time > 0) {
                                   setState(() {
-                                    widget._time = WAIT_TIME;
-                                  });
-                                  var interval = new Duration(seconds: 1);
-                                  widget._timer = new Timer.periodic(interval,
-                                      (Timer timer) {
-                                    if (widget._time > 0) {
-                                      setState(() {
-                                        widget._time -= 1;
-                                      });
-                                    } else {
-                                      widget._timer.cancel();
-                                    }
+                                    widget._time -= 1;
                                   });
                                 } else {
-                                  _saveTraining(context);
-                                  Wakelock.disable();
+                                  widget._timer.cancel();
                                 }
                               });
-                            },
-                          ),
-              ];
+                            } else {
+                              _saveTraining(context);
+                              Wakelock.disable();
+                            }
+                          });
+                        },
+                      ),
+          ];
   }
 
   List<Widget> _displayRegularTrainingForm() {
