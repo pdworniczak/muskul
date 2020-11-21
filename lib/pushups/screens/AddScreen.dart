@@ -34,6 +34,7 @@ class _AddScreenState extends State<AddScreen> {
   @override
   void dispose() {
     Wakelock.disable();
+    widget._timer.cancel();
     super.dispose();
   }
 
