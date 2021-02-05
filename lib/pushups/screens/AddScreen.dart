@@ -29,10 +29,7 @@ class _AddScreenState extends State<AddScreen> {
   Timer _timer;
   bool _isSaving = false;
 
-  _AddScreenState() {
-    this._currentTraining = widget.pushupsModel
-        .getNextTraining(widget.pushupsModel.getLastTraining());
-  }
+  _AddScreenState();
 
   @override
   void dispose() {
@@ -43,6 +40,9 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
+    this._currentTraining = widget.pushupsModel
+        .getNextTraining(widget.pushupsModel.getLastTraining());
+
     Wakelock.enable();
 
     return Scaffold(
@@ -84,18 +84,18 @@ class _AddScreenState extends State<AddScreen> {
           RaisedButton(
             child: Text('-'),
             onPressed: () => setState(() {
-              --training.result;
+              --_currentResult;
             }),
           ),
           Container(
               margin: EdgeInsets.all(10),
               child: Text(
-                training.result.toString(),
+                _currentResult.toString(),
               )),
           RaisedButton(
             child: Text('+'),
             onPressed: () => setState(() {
-              ++training.result;
+              ++_currentResult;
             }),
           ),
         ],
@@ -104,7 +104,12 @@ class _AddScreenState extends State<AddScreen> {
       RaisedButton(
           child: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz'),
           disabledColor: Colors.grey,
-          onPressed: _isSaving ? null : () => _saveTraining(context))
+          onPressed: _isSaving
+              ? null
+              : () {
+                  training.result = _currentResult;
+                  _saveTraining(context);
+                })
     ];
   }
 
@@ -249,10 +254,9 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   Widget _header(TrainingModel training) {
-    var series = _getScheduleSerieForTraining(_currentTraining);
-
     List<Widget> header = [];
     if (training is RegularTraining) {
+      var series = _getScheduleSerieForTraining(_currentTraining);
       header.add(Text("dzień: ${training.day}"));
       header.add(Text("serie: ${series.toString()}"));
     }

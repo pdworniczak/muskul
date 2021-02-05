@@ -42,7 +42,6 @@ class MyApp extends StatelessWidget {
               home: AuthenticationScreen(),
             ),
           );
-          ;
         }
 
         // Otherwise, show something whilst waiting for initialization to complete

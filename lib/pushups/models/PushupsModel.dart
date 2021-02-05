@@ -86,7 +86,13 @@ class PushupsModel extends ChangeNotifier {
 
   bool isTrainingFinished(TrainingModel training) {
     if (training.scope == Scope.TEST) {
-      return true;
+      var testTraining = training as TestTraining;
+
+      if (testTraining.result > 0) {
+        return true;
+      }
+
+      return false;
     }
 
     var regTraining = (training as RegularTraining);
