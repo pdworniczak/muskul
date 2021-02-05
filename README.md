@@ -26,6 +26,6 @@ For differen run types app use flavors. You have to put you `google-service.json
 
 ## build
 
-Build rady to install on real device.
+Build ready to install on real device.
 
 -command: `flutter build apk --split-per-abi --flavor prod`

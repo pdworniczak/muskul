@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muskul/pushups/models/PushupsModel.dart';
+import 'package:muskul/service/store.dart';
 import 'package:provider/provider.dart';
 import 'authentication/AuthenticationScreen.dart';
 
@@ -11,7 +12,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  final _initialization = Future.wait([Firebase.initializeApp(), Store.init()]);
 
   @override
   Widget build(BuildContext context) {
