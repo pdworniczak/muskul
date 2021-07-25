@@ -32,7 +32,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           _pref.getStringList('user').length == 2) {
         return login(context, credentials);
       }
-      return [];
+      return Future.value(null);
     }(), builder: (BuildContext context, AsyncSnapshot snapshot) {
       print(
           '${ConnectionState.done} ${snapshot.connectionState} ${snapshot.data}');

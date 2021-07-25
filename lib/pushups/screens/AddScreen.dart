@@ -9,7 +9,7 @@ import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/navigation/navigation.dart' as navigation;
 
-const WAIT_TIME = 60;
+const WAIT_TIME = 2;
 
 class AddScreen extends StatefulWidget {
   final PushupsModel pushupsModel;
@@ -18,7 +18,7 @@ class AddScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _AddScreenState();
+    return _AddScreenState(this.pushupsModel);
   }
 }
 
@@ -29,20 +29,22 @@ class _AddScreenState extends State<AddScreen> {
   Timer _timer;
   bool _isSaving = false;
 
-  _AddScreenState();
+  _AddScreenState(PushupsModel pushupsModel) {
+    this._currentTraining =
+        pushupsModel.getNextTraining(pushupsModel.getLastTraining());
+  }
 
   @override
   void dispose() {
     Wakelock.disable();
-    this._timer.cancel();
+    if (this._timer != null) {
+      this._timer.cancel();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    this._currentTraining = widget.pushupsModel
-        .getNextTraining(widget.pushupsModel.getLastTraining());
-
     Wakelock.enable();
 
     return Scaffold(
