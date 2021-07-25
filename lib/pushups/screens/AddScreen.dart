@@ -9,7 +9,7 @@ import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/navigation/navigation.dart' as navigation;
 
-const WAIT_TIME = 2;
+const WAIT_TIME = 60;
 
 class AddScreen extends StatefulWidget {
   final PushupsModel pushupsModel;
