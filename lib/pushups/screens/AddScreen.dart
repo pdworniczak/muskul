@@ -83,7 +83,7 @@ class _AddScreenState extends State<AddScreen> {
     return [
       Row(
         children: <Widget>[
-          RaisedButton(
+          ElevatedButton(
             child: Text('-'),
             onPressed: () => setState(() {
               --_currentResult;
@@ -94,7 +94,7 @@ class _AddScreenState extends State<AddScreen> {
               child: Text(
                 _currentResult.toString(),
               )),
-          RaisedButton(
+          ElevatedButton(
             child: Text('+'),
             onPressed: () => setState(() {
               ++_currentResult;
@@ -103,9 +103,8 @@ class _AddScreenState extends State<AddScreen> {
         ],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
-      RaisedButton(
+      ElevatedButton(
           child: Text(_isSaving ? 'Zapisywanie...' : 'Zapisz'),
-          disabledColor: Colors.grey,
           onPressed: _isSaving
               ? null
               : () {
@@ -132,7 +131,7 @@ class _AddScreenState extends State<AddScreen> {
 
     return isFirstSeries()
         ? [
-            RaisedButton(
+            ElevatedButton(
               child: Text('Start'),
               onPressed: () {
                 setState(() {
@@ -144,7 +143,7 @@ class _AddScreenState extends State<AddScreen> {
         : [
             ..._displayRegularTrainingForm(),
             isLastSerie()
-                ? RaisedButton(
+                ? ElevatedButton(
                     child: Text('Zapisz'),
                     onPressed: () {
                       training.result.add(_currentResult);
@@ -156,7 +155,7 @@ class _AddScreenState extends State<AddScreen> {
                         child: Text('$_time'),
                         padding: EdgeInsets.all(5),
                       )
-                    : RaisedButton(
+                    : ElevatedButton(
                         child: Text('Następna'),
                         onPressed: () {
                           setState(() {
@@ -202,7 +201,7 @@ class _AddScreenState extends State<AddScreen> {
               Spacer(),
               Padding(
                 padding: EdgeInsets.all(5),
-                child: RaisedButton(
+                child: ElevatedButton(
                   child: Text('-'),
                   onPressed: () => setState(() {
                     --_currentResult;
@@ -218,7 +217,7 @@ class _AddScreenState extends State<AddScreen> {
                   )),
               Padding(
                 padding: EdgeInsets.all(5),
-                child: RaisedButton(
+                child: ElevatedButton(
                   child: Text('+'),
                   onPressed: () => setState(() {
                     ++_currentResult;

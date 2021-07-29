@@ -82,7 +82,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                               onSaved: (val) => password = val,
                               validator: (value) =>
                                   value.isEmpty ? "Proszę podać hasło." : null),
-                          RaisedButton(
+                          ElevatedButton(
                               child: Text("Zaloguj"),
                               onPressed: handleFormLogin(context)),
                           Visibility(

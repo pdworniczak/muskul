@@ -35,12 +35,12 @@ class NavigationScreen extends StatelessWidget {
           children: <Widget>[
             Spacer(),
             Consumer<PushupsModel>(
-              builder: (context, pushups, _) => RaisedButton(
+              builder: (context, pushups, _) => ElevatedButton(
                 child: Text("Dodaj"),
                 onPressed: () => navigation.toAdd(context),
               ),
             ),
-            RaisedButton(
+            ElevatedButton(
                 child: Text("Historia"),
                 onPressed: () => navigation.toHistory(context)),
             Spacer(flex: 2),
