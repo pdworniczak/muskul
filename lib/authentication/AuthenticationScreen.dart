@@ -110,38 +110,33 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   }
 
   Function handleFormLogin(BuildContext context) {
-    var pushupsModel = Provider.of<PushupsModel>(context);
-
     return () async {
       FormState authenticationFormState = _authenticationFormKey.currentState;
       authenticationFormState.save();
       if (authenticationFormState.validate()) {
         print("email: $email password: $password");
 
-        try {
-          await FirebaseAuth.instance
-              .signInWithEmailAndPassword(email: email, password: password);
-          await pushupsModel.getTrainings();
-          _pref.setStringList('user', [email, password]);
-          navigation.toNavigation(context);
-        } on FirebaseAuthException catch (e) {
-          setState(() {
-            isError = true;
-          });
-          print('FirebaseAuthException ${e.message}');
-        }
+        login(context, [email, password]);
       }
     };
   }
 
   login(BuildContext context, List<String> credentials) async {
     print('===> login');
-    var pushupsModel = Provider.of<PushupsModel>(context);
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: credentials[0], password: credentials[1]);
-    await pushupsModel.getTrainings();
-    navigation.toNavigation(context);
-
-    print('===> logged');
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: credentials[0], password: credentials[1]);
+      await Provider.of<PushupsModel>(context, listen: false).getTrainings();
+      _pref.setStringList('user', [email, password]);
+      navigation.toNavigation(context);
+      print('===> logged');
+    } on FirebaseAuthException catch (ex) {
+      setState(() {
+        isError = true;
+      });
+      Store.getInstance().remove("user");
+      print('FirebaseAuthException ${ex.message}');
+      return null;
+    }
   }
 }
