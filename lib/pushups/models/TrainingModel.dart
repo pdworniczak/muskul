@@ -16,7 +16,6 @@ class TrainingModel {
 
   Timestamp get date {
     return _date;
-    
   }
 
   set uid(uid) {
@@ -25,6 +24,18 @@ class TrainingModel {
 
   Map<String, dynamic> toJSON() {
     return {'uid': this._uid, 'date': this._date, 'scope': this._scope};
+  }
+
+  int getScopeMax() {
+    var max = this._scope.split('-')[1];
+
+    return int.parse(max);
+  }
+
+  int getScopeMin() {
+    var min = this._scope.split('-')[0];
+
+    return int.parse(min);
   }
 }
 

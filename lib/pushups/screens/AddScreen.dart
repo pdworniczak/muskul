@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:muskul/pushups/models/ScheduleModel.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:intl/intl.dart';
 import 'package:muskul/pushups/models/PushupsModel.dart';
 import 'package:muskul/pushups/models/TrainingModel.dart';
 import 'package:muskul/navigation/navigation.dart' as navigation;
-
-const WAIT_TIME = 60;
 
 class AddScreen extends StatefulWidget {
   final PushupsModel pushupsModel;
@@ -165,7 +164,7 @@ class _AddScreenState extends State<AddScreen> {
                                   scheduledSeries.getSerieExpectedResult(
                                       training.result.length + 1);
                               setState(() {
-                                _time = WAIT_TIME;
+                                _time = _getBreakTime(training);
                               });
                               var interval = new Duration(seconds: 1);
                               _timer =
@@ -277,5 +276,27 @@ class _AddScreenState extends State<AddScreen> {
         ),
       )
     ]);
+  }
+
+  int _getBreakTime(RegularTraining training) {
+    int multiple = kDebugMode ? 1 : 10;
+
+    if (training.getScopeMax() <= 30) {
+      switch (training.day % 3) {
+        case 0:
+          return 12 * multiple;
+        case 1:
+          return 6 * multiple;
+        case 2:
+          return 9 * multiple;
+      }
+    } else {
+      switch (training.day % 3) {
+        case 1:
+          return 6 * multiple;
+        default:
+          return 4 * multiple;
+      }
+    }
   }
 }
