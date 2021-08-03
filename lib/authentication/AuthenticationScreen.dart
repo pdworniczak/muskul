@@ -22,91 +22,90 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
   bool isError = false;
   String errorMessage = "";
   SharedPreferences _pref = Store.getInstance();
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    if (_pref.getStringList('user') != null &&
+        _pref.getStringList('user').length == 2) {
+      setState(() {
+        isLoading = true;
+      });
+      login(context, _pref.getStringList('user'));
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(future: () {
-      var credentials = Store.getInstance().getStringList('user');
-
-      if (_pref.getStringList('user') != null &&
-          _pref.getStringList('user').length == 2) {
-        return login(context, credentials);
-      }
-      return Future.value(null);
-    }(), builder: (BuildContext context, AsyncSnapshot snapshot) {
-      print(
-          '${ConnectionState.done} ${snapshot.connectionState} ${snapshot.data}');
-      if (snapshot.data == null) {
-        return Material(
-          child: Container(
+    return Material(
+        child: Container(
             child: Form(
-              key: _authenticationFormKey,
-              child: Column(
-                children: <Widget>[
-                  Spacer(),
-                  Text(
-                    "MUSKUŁ",
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Container(
-                      width: 260,
-                      child: Column(
-                        children: <Widget>[
-                          TextFormField(
-                            decoration: InputDecoration(labelText: "email"),
+      key: _authenticationFormKey,
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Text(
+            "MUSKUŁ",
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: isLoading
+                ? Text("Wczytywanie!")
+                : Container(
+                    width: 260,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          decoration: InputDecoration(labelText: "email"),
+                          onChanged: (val) {
+                            setState(() {
+                              isError = false;
+                            });
+                          },
+                          onSaved: (val) => email = val,
+                          validator: (value) => value.isEmpty
+                              ? "Proszę podać prawidłowy email."
+                              : null,
+                        ),
+                        TextFormField(
+                            decoration: InputDecoration(
+                              labelText: "hasło",
+                            ),
+                            obscureText: true,
                             onChanged: (val) {
                               setState(() {
                                 isError = false;
                               });
                             },
-                            onSaved: (val) => email = val,
-                            validator: (value) => value.isEmpty
-                                ? "Proszę podać prawidłowy email."
-                                : null,
+                            onSaved: (val) => password = val,
+                            validator: (value) =>
+                                value.isEmpty ? "Proszę podać hasło." : null),
+                        ElevatedButton(
+                            child: Text("Zaloguj"),
+                            onPressed: handleFormLogin(context)),
+                        Visibility(
+                          child: Text(
+                            'Błędny login lub hasło',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Color.fromRGBO(255, 0, 0, 1)),
                           ),
-                          TextFormField(
-                              decoration: InputDecoration(
-                                labelText: "hasło",
-                              ),
-                              obscureText: true,
-                              onChanged: (val) {
-                                setState(() {
-                                  isError = false;
-                                });
-                              },
-                              onSaved: (val) => password = val,
-                              validator: (value) =>
-                                  value.isEmpty ? "Proszę podać hasło." : null),
-                          ElevatedButton(
-                              child: Text("Zaloguj"),
-                              onPressed: handleFormLogin(context)),
-                          Visibility(
-                            child: Text(
-                              'Błędny login lub hasło',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromRGBO(255, 0, 0, 1)),
-                            ),
-                            visible: isError,
-                          ),
-                        ],
-                      ),
+                          visible: isError,
+                        ),
+                      ],
                     ),
                   ),
-                  Spacer(),
-                ],
-              ),
-            ),
           ),
-        );
-      }
-      return Text("Ładowanie");
-    });
+          Spacer(),
+        ],
+      ),
+    )));
   }
 
   Function handleFormLogin(BuildContext context) {
@@ -136,7 +135,9 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
       });
       Store.getInstance().remove("user");
       print('FirebaseAuthException ${ex.message}');
-      return null;
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 }
