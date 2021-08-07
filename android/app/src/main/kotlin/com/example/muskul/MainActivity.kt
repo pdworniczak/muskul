@@ -1,4 +1,4 @@
-package com.example.muskul
+package pl.muskul.mobile
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
