@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/select_training">
+
+    <fragment
+        android:id="@+id/select_training"
+        android:name="pl.muskul.SelectTraining"
+        android:label="Wybierz rodzaj treningu"
+        tools:layout="@layout/fragment_select_training">
+    </fragment>
+
+    <fragment
+        android:id="@+id/stretch_training"
+        android:name="pl.muskul.TimeTraining"
+        android:label="Trening"
+        tools:layout="@layout/fragment_time_training">
+    </fragment>
+</navigation>
