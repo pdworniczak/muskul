@@ -7,4 +7,8 @@ public class TimeExercise extends Exercise {
         super(name);
         this.time = time;
     }
+
+    public int getTime() {
+        return this.time;
+    }
 }

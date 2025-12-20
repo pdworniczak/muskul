@@ -29,7 +29,7 @@ public class TrainingConfiguration {
         CORE_TRAINING = new Training("Traning mięśni brzucha", TrainingType.REPS, TrainingArea.CORE, 30,
                 Arrays.asList(
                         new RepsExercise("Brzuszki z rękoma do przodu", 14),
-                        new RepsExercise("Rosyjski twist", 20),
+                        new RepsExercise("Skręty w bok", 20),
                         new RepsExercise("Przyciagnie nogi w podporze", 20),
                         new RepsExercise("Naprzemienne sięganie do kostek", 20),
                         new RepsExercise("Unoszenie nóg w leżeniu tyłem", 16),
