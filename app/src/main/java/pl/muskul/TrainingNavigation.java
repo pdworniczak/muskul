@@ -14,8 +14,8 @@ import java.util.List;
 
 import pl.muskul.training.data.TrainingType;
 
-public class SelectTraining extends Fragment {
-    public SelectTraining() {
+public class TrainingNavigation extends Fragment {
+    public TrainingNavigation() {
     }
 
     @Override
@@ -26,7 +26,7 @@ public class SelectTraining extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_select_training, container, false);
+        return inflater.inflate(R.layout.fragment_training_navigation, container, false);
     }
 
     @Override
@@ -48,6 +48,9 @@ public class SelectTraining extends Fragment {
                     handleSelectClick((String) getView().findViewById(id).getTag())
             );
         });
+
+        View diaryButton = getView().findViewById(R.id.select_diary);
+        diaryButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.diary));
     }
 
     private void handleSelectClick(String tag) {

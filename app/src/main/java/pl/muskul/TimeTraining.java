@@ -138,8 +138,12 @@ public class TimeTraining extends Fragment {
                     statusViewModel.setStatus(ExerciseStatus.RUNNING);
                     break;
                 }
+                case RUNNING: {
+                    statusViewModel.setStatus(ExerciseStatus.PAUSED);
+                    break;
+                }
                 case FINISHED: {
-                    NavHostFragment.findNavController(this).navigate(R.id.select_training);
+                    NavHostFragment.findNavController(this).navigate(R.id.training_navigation);
                 }
             }
         });

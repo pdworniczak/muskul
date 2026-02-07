@@ -1,10 +1,8 @@
-package pl.muskul.repository;
+package pl.muskul.repository.model;
 
 import pl.muskul.training.data.TrainingType;
 
 public final class WorkoutHistory {
-    public static final String TABLE_NAME = "WorkoutHistory";
-
     private Long id;
     private long date;
     private long length;

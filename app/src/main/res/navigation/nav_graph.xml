@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/select_training">
+    app:startDestination="@id/training_navigation">
 
     <fragment
-        android:id="@+id/select_training"
-        android:name="pl.muskul.SelectTraining"
+        android:id="@+id/training_navigation"
+        android:name="pl.muskul.TrainingNavigation"
         android:label="Wybierz rodzaj treningu"
-        tools:layout="@layout/fragment_select_training">
+        tools:layout="@layout/fragment_training_navigation">
     </fragment>
 
     <fragment
@@ -17,5 +17,12 @@
         android:name="pl.muskul.TimeTraining"
         android:label="Trening"
         tools:layout="@layout/fragment_time_training">
+    </fragment>
+
+    <fragment
+        android:id="@+id/diary"
+        android:name="pl.muskul.Diary"
+        android:label="Dziennik"
+        tools:layout="@layout/fragment_diary">
     </fragment>
 </navigation>

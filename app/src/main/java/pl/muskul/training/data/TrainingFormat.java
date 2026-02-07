@@ -1,5 +1,5 @@
 package pl.muskul.training.data;
 
-public enum TrainingType {
+public enum TrainingFormat {
     REPS, TIME
 }

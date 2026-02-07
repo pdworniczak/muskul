@@ -40,6 +40,8 @@ dependencies {
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
     testImplementation libs.junit
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 

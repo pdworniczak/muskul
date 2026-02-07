@@ -5,15 +5,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.widget.TextView;
-
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.ui.AppBarConfiguration;
 
 import pl.muskul.databinding.ActivityMainBinding;
 import pl.muskul.training.TrainingService;
 import pl.muskul.training.data.Training;
-import pl.muskul.training.data.TrainingArea;
+import pl.muskul.training.data.TrainingType;
 import pl.muskul.training.model.TrainingViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         trainingViewModel = new ViewModelProvider(this).get(TrainingViewModel.class);
     }
 
-    public void getTraining(TrainingArea trainingArea) {
-        Training training = trainingService.getTraining(trainingArea);
+    public void getTraining(TrainingType trainingType) {
+        Training training = trainingService.getTraining(trainingType);
 
         trainingViewModel.setData(training);
     }

@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Training {
     private String name;
+    private TrainingFormat trainingFormat;
     private TrainingType trainingType;
-    private TrainingArea trainingArea;
     private Integer restTime;
     private List<Exercise> trainingExercises;
-    public Training(String name, TrainingType trainingType, TrainingArea trainingArea, Integer restTime, List<Exercise> trainingExercises) {
+    public Training(String name, TrainingFormat trainingFormat, TrainingType trainingType, Integer restTime, List<Exercise> trainingExercises) {
         this.name = name;
+        this.trainingFormat = trainingFormat;
         this.trainingType = trainingType;
-        this.trainingArea = trainingArea;
         this.restTime = restTime;
         this.trainingExercises = trainingExercises;
     }
@@ -20,12 +20,12 @@ public class Training {
         return name;
     }
 
-    public TrainingType getTrainingType() {
-        return trainingType;
+    public TrainingFormat getTrainingType() {
+        return trainingFormat;
     }
 
-    public TrainingArea getTrainingArea() {
-        return trainingArea;
+    public TrainingType getTrainingArea() {
+        return trainingType;
     }
 
     public Integer getRestTime() {
