@@ -1,5 +1,5 @@
 package pl.muskul.training.data;
 
-public enum TrainingType {
-    REPS, TIME
+public enum TrainingArea {
+    CHEST, CORE, STRETCH
 }

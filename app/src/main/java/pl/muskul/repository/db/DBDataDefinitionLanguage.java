@@ -1,6 +1,8 @@
-package pl.muskul.repository;
+package pl.muskul.repository.sqlite;
 
 import java.text.MessageFormat;
+
+import pl.muskul.repository.model.WorkoutHistory;
 
 public final class DBDataDefinitionLanguage {
     private DBDataDefinitionLanguage() {}
@@ -11,7 +13,7 @@ public final class DBDataDefinitionLanguage {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 date INTEGER NOT NULL,
                 length INTEGER NOT NULL,
-                workout TEXT NOT NULL CHECK (workout IN ('STRETCH', 'CHEST', 'CORE')),
+                workout TEXT NOT NULL CHECK (workout IN (''STRETCH'', ''CHEST'', ''CORE''))
             )
         """, WorkoutHistory.TABLE_NAME );
     }

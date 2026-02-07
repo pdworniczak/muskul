@@ -12,7 +12,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import java.util.List;
 
-import pl.muskul.training.data.TrainingArea;
+import pl.muskul.training.data.TrainingType;
 
 public class SelectTraining extends Fragment {
     public SelectTraining() {
@@ -51,9 +51,9 @@ public class SelectTraining extends Fragment {
     }
 
     private void handleSelectClick(String tag) {
-        TrainingArea trainingArea = TrainingArea.valueOf(tag);
+        TrainingType trainingType = TrainingType.valueOf(tag);
 
-        ((MainActivity) getActivity()).getTraining(trainingArea);
+        ((MainActivity) getActivity()).getTraining(trainingType);
 
         NavHostFragment.findNavController(this).navigate(R.id.stretch_training);
     }

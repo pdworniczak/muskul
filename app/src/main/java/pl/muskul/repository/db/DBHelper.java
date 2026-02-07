@@ -1,4 +1,4 @@
-package pl.muskul.repository;
+package pl.muskul.repository.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,4 +21,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+
 }
