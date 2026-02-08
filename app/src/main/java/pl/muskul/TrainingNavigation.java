@@ -49,8 +49,8 @@ public class TrainingNavigation extends Fragment {
             );
         });
 
-        View diaryButton = getView().findViewById(R.id.select_diary);
-        diaryButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.diary));
+        View trainingHistoryButton = getView().findViewById(R.id.select_training_history);
+        trainingHistoryButton.setOnClickListener(v -> NavHostFragment.findNavController(this).navigate(R.id.training_history));
     }
 
     private void handleSelectClick(String tag) {

@@ -20,9 +20,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/diary"
-        android:name="pl.muskul.Diary"
+        android:id="@+id/training_history"
+        android:name="pl.muskul.TrainingHistory"
         android:label="Dziennik"
-        tools:layout="@layout/fragment_diary">
+        tools:layout="@layout/fragment_training_history">
     </fragment>
 </navigation>

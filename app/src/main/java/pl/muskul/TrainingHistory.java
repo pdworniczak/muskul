@@ -1,5 +1,6 @@
 package pl.muskul;
 
+import android.database.DataSetObserver;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,13 +10,18 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+
+import java.util.Arrays;
 
 import pl.muskul.repository.WorkoutHistoryRepository;
 
-public class Diary extends Fragment {
+public class TrainingHistory extends Fragment {
     private WorkoutHistoryRepository workoutHistoryRepository;
 
-    public Diary() {}
+    public TrainingHistory() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,7 +32,7 @@ public class Diary extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_diary, container, false);
+        return inflater.inflate(R.layout.fragment_training_history, container, false);
     }
 
     @Override
@@ -37,6 +43,7 @@ public class Diary extends Fragment {
     }
 
     private void initView(View view) {
-
+        ListView listView = view.findViewById(R.id.training_list);
+        listView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, Arrays.asList("test1", "test8"))); //workoutHistoryRepository.getAll()));
     }
 }
