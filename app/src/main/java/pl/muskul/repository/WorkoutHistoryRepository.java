@@ -56,7 +56,6 @@ public class WorkoutHistoryRepository {
 
     private WorkoutHistory mapToWorkout(Cursor cursor) {
         return new WorkoutHistory(
-                cursor.getLong(cursor.getColumnIndexOrThrow(DBContract.Columns.ID)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(DBContract.Columns.DATE)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(DBContract.Columns.LENGTH)),
                 TrainingType.valueOf(cursor.getString(cursor.getColumnIndexOrThrow(DBContract.Columns.WORKOUT)))

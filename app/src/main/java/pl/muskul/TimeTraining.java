@@ -2,6 +2,7 @@ package pl.muskul;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import pl.muskul.repository.WorkoutHistoryRepository;
+import pl.muskul.repository.model.WorkoutHistory;
 import pl.muskul.training.data.ExerciseStatus;
 import pl.muskul.training.data.TimeExercise;
 import pl.muskul.training.data.Training;
@@ -24,9 +27,12 @@ import pl.muskul.training.model.TrainingViewModel;
 
 public class TimeTraining extends Fragment {
 
+    private WorkoutHistoryRepository workoutHistoryRepository;
     private TrainingViewModel trainingViewModel;
     private ExerciseStatusViewModel statusViewModel;
     private int currentExerciseIndex = 0;
+
+    private final int INTERVAL = BuildConfig.DEBUG ? 10 : 1000;
 
     public TimeTraining() {
     }
@@ -37,6 +43,7 @@ public class TimeTraining extends Fragment {
 
         trainingViewModel = new ViewModelProvider(requireActivity()).get(TrainingViewModel.class);
         statusViewModel = new ViewModelProvider(requireActivity()).get(ExerciseStatusViewModel.class);
+        workoutHistoryRepository = new WorkoutHistoryRepository(requireContext());
     }
 
     @Override
@@ -70,7 +77,7 @@ public class TimeTraining extends Fragment {
 
         statusViewModel.getStatus().observe(getViewLifecycleOwner(), status -> {
             Training training = trainingViewModel.getData().getValue();
-            TimeExercise exercise = (TimeExercise) training.getTrainingExercises().get(currentExerciseIndex);
+            TimeExercise exercise = currentExerciseIndex >= training.getTrainingExercises().size() ? null : (TimeExercise) training.getTrainingExercises().get(currentExerciseIndex);
 
             if (status == ExerciseStatus.RUNNING || status == ExerciseStatus.REST) {
                 requireActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -86,15 +93,18 @@ public class TimeTraining extends Fragment {
                 case RUNNING: {
                     exerciseNameText.setText(exercise.getName());
                     actionButton.setText("Zatrzymaj");
-                    (new CountDownTimer(exercise.getTime() * 1000, 1000) {
+                    (new CountDownTimer(exercise.getTime() * INTERVAL, INTERVAL) {
                         @Override
                         public void onTick(long millisUntilFinished) {
-                            exerciseTimeText.setText(String.valueOf(millisUntilFinished / 1000));
+                            exerciseTimeText.setText(String.valueOf(millisUntilFinished / INTERVAL));
                         }
 
                         public void onFinish() {
-                            if (currentExerciseIndex == training.getTrainingExercises().size()) {
+                            if (currentExerciseIndex + 1 == training.getTrainingExercises().size()) {
                                 statusViewModel.setStatus(ExerciseStatus.FINISHED);
+
+                                WorkoutHistory workoutHistory = new WorkoutHistory(System.currentTimeMillis(), exercise.getTime(), training.getTrainingType());
+                                workoutHistoryRepository.insert(workoutHistory);
                             } else {
                                 statusViewModel.setStatus(ExerciseStatus.REST);
                             }
@@ -104,23 +114,28 @@ public class TimeTraining extends Fragment {
                 }
                 case REST: {
                     exerciseTimeText.setText(String.valueOf(training.getRestTime()));
-                    (new CountDownTimer(training.getRestTime() * 1000, 1000) {
+                    (new CountDownTimer(training.getRestTime() * INTERVAL, INTERVAL) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             exerciseNameText.setText("Odpoczynek");
-                            exerciseTimeText.setText(String.valueOf(millisUntilFinished / 1000));
+                            exerciseTimeText.setText(String.valueOf(millisUntilFinished / INTERVAL));
                         }
 
                         @Override
                         public void onFinish() {
                             if (currentExerciseIndex >= training.getTrainingExercises().size()) {
                                 statusViewModel.setStatus(ExerciseStatus.FINISHED);
+
                             } else {
                                 currentExerciseIndex++;
                                 statusViewModel.setStatus(ExerciseStatus.RUNNING);
                             }
                         }
                     }).start();
+                    break;
+                }
+                case PAUSED: {
+                    actionButton.setText("Wznów");
                     break;
                 }
                 case FINISHED: {

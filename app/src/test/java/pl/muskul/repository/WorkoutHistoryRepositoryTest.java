@@ -31,7 +31,7 @@ public class WorkoutHistoryRepositoryTest {
     @Test
     public void insert_then_getAll_returnsInsertedRecord() {
         long now = System.currentTimeMillis();
-        WorkoutHistory w = new WorkoutHistory(0L, now, 3600L, TrainingType.CORE);
+        WorkoutHistory w = new WorkoutHistory(now, 3600L, TrainingType.CORE);
         repo.insert(w);
 
         List<WorkoutHistory> all = repo.getAll();
@@ -42,7 +42,6 @@ public class WorkoutHistoryRepositoryTest {
         assertEquals(now, first.getDate());
         assertEquals(3600L, first.getLength());
         assertEquals(TrainingType.CORE, first.getType());
-        assertTrue(first.getId() > 0L); // generated id
     }
 
     @Test

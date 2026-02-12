@@ -20,11 +20,11 @@ public class Training {
         return name;
     }
 
-    public TrainingFormat getTrainingType() {
+    public TrainingFormat getTrainingFormat() {
         return trainingFormat;
     }
 
-    public TrainingType getTrainingArea() {
+    public TrainingType getTrainingType() {
         return trainingType;
     }
 
